@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-
+# udis key = 7136f4075d33998d3d77a11a9c442439
 
 def retrieve_data_for_db(cursor,cnx):
     api_key = "XXXXXXXXXXXXXXXXXXXX"
