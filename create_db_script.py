@@ -31,6 +31,7 @@ def create_database_script(cursor,DB_NAME):
                         "popularity INT,release_date VARCHAR(45),revenue INT,status VARCHAR(45),"
                         "vote_average FLOAT,vote_count INT)")
 
+
     TABLES['genre']=("CREATE TABLE genre (genre_id INT NOT NULL PRIMARY KEY, genre VARCHAR(45))")
 
     TABLES['movie_genre'] = ("CREATE TABLE movie_genre (movie_id INT NOT NULL, genre_id INT NOT NULL, PRIMARY KEY"
@@ -56,6 +57,7 @@ def create_database_script(cursor,DB_NAME):
     TABLES['award_person'] = ("CREATE TABLE award_person (award_id INT NOT NULL PRIMARY KEY,person_id INT NOT NULL,"
                               "FOREIGN KEY (person_id) REFERENCES person(person_id),FOREIGN KEY (award_id) REFERENCES "
                               "award(id) )")
+
 
 
     for table_name in TABLES:
