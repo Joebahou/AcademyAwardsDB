@@ -44,14 +44,12 @@ def retrive_data_from_csv(cursor, cnx):
     print(rows)
     file.close()
 
+# udis key = 7136f4075d33998d3d77a11a9c442439
 
 def retrieve_data_for_db(cursor, cnx):
     api_key = "12d3cdb961e65887562f143725ee1a2b"
     link = "https://api.themoviedb.org/3/movie/144?api_key=12d3cdb961e65887562f143725ee1a2b&language=en-US"
     response = requests.get(link)
-    tmp_link = "https://api.themoviedb.org/3/search/movie?api_key=12d3cdb961e65887562f143725ee1a2b&language=en-US&query=Toy%20Story%203&page=1&include_adult=false&year=2010&primary_release_year=2010"
-    tmp_response = requests.get(tmp_link)
-    d = tmp_response.json()
 
     datetmp = response.json()
     # getting first page
