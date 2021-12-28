@@ -26,7 +26,12 @@ def create_database_script(cursor,DB_NAME):
 
 
     TABLES = {}
-    TABLES['movies'] = ("CREATE TABLE movies (movie_id INT NOT NULL PRIMARY KEY,title VARCHAR(45), vote_average FLOAT)")
+    TABLES['movies'] = ("CREATE TABLE movies (movie_id INT NOT NULL PRIMARY KEY,title VARCHAR(250),adult BOOL,"
+                        "budget INT,imdb_id VARCHAR(250),overview VARCHAR(1000),original_language CHAR(250),"
+                        "popularity INT,release_date VARCHAR(250),revenue INT,status VARCHAR(250),"
+                        "vote_average FLOAT,vote_count INT,video VARCHAR(250))")
+    TABLES['genres']=("CREATE TABLE genres (genre_id INT NOT NULL PRIMARY KEY, genre VARCHAR(250))")
+
 
 
     for table_name in TABLES:

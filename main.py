@@ -24,7 +24,7 @@ cursor = cnx.cursor()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    create_db_script.create_database_script(cursor,DB_NAME)
+    #create_db_script.create_database_script(cursor,DB_NAME)
     api_data_retrieve.retrieve_data_for_db(cursor,cnx)
     cursor.close()
     cnx.close()
