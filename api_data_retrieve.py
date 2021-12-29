@@ -19,8 +19,6 @@ class DBRetrieveData:
             self.cursor.execute(query)
             if size == 0:
                 return self.cursor.fetchall()
-            elif size == 1:
-                return self.cursor.fetchone()
             else:
                 return self.cursor.fetchmany(size)
         except mysql.connector.Error as err:
@@ -62,11 +60,11 @@ class DBRetrieveData:
 
     def getMoviesByName(self, movieTitle: string):
         query = """SELECT * FROM movie WHERE title = '%s'""" % movieTitle
-        return self.getFromDB(query, 1)
+        return self.getFromDB(query)
 
     def getPersonsByName(self, personName: string):
         query = """SELECT * FROM person WHERE name = '%s'""" % personName
-        return self.getFromDB(query, 1)
+        return self.getFromDB(query)
 
     def addPersonToDB(self, row):
         names = getPersonsFromRow(row)
@@ -77,19 +75,19 @@ class DBRetrieveData:
         for person in names:
             highestId = highestId + 1
             if not self.isPersonExistsInDB(person):
-                add_person = "INSERT INTO movies (movie_id,title) VALUES (%s,%s)" % (highestId, person)
+                add_person = "INSERT INTO person (person_id,name) VALUES (%s,'%s')" % (highestId, person)
                 self.insertToDB(add_person)
 
     def addMovieToDB(self, row):
         title = getTitleFromRow(row)
         if not self.isMovieExistsInDB(title):
             highestId = self.getHighestMovieID()
-            add_movie = "INSERT INTO movies (movie_id,title) VALUES (%s,%s)" % (highestId + 1, title)
+            add_movie = """INSERT INTO movie (movie_id,title) VALUES (%s,'%s')""" % (highestId + 1, title)
             self.insertToDB(add_movie)
 
     def getHighestMovieID(self):
         query = """SELECT MAX(movie_id) FROM movie"""
-        highestID = self.getFromDB(query, 1)
+        highestID = self.getFromDB(query)
         return getNumOrZeroIfNone(highestID)
 
     def getHighestPersonID(self):
@@ -99,7 +97,6 @@ class DBRetrieveData:
 
     def getHighestCategoryID(self):
         query = """SELECT MAX(id) FROM oscar_category"""
-        self.cursor.execute(query)
         highestID = self.getFromDB(query, 1)
         return getNumOrZeroIfNone(highestID)
 
@@ -109,8 +106,8 @@ class DBRetrieveData:
 
     def addCategoryToDB(self, category):
         highestId = self.getHighestCategoryID()
-        add_movie = "INSERT INTO movies (movie_id,title) VALUES (%s,%s)" % (highestId + 1, category)
-        self.insertToDB(add_movie)
+        add_category = """INSERT INTO oscar_category (id,category) VALUES (%s,'%s')""" % (highestId + 1, category)
+        self.insertToDB(add_category)
 
 
 def getTitleFromRow(row):
@@ -133,10 +130,10 @@ def getPersonsFromRow(row):
 
 
 def getNumOrZeroIfNone(num):
-    if num is None:
+    if num[0][0] == None:
         return 0
     else:
-        return num
+        return num[0][0]
 
 # udis key = 7136f4075d33998d3d77a11a9c442439
 #
