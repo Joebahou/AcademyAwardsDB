@@ -1,5 +1,7 @@
 import csv
 
+import award
+import categories
 import movie
 from categories import *
 from person import getHighestPersonID, isPersonExistsInDB
@@ -39,13 +41,6 @@ def addCategoryToDB(category):
         db_connector.insertToDB(add_category)
 
 
-def addAwardToDB(year, category_id, movie_id, has_won):
-    add_category = """INSERT INTO award (year, oscar_category_id, movie_id, has_won)
-     VALUES (%s,%s,%s,%s)""" % \
-                   (year, category_id, movie_id, has_won)
-    db_connector.insertToDB(add_category)
-
-
 def addCategoriesToDB():
     for category in Categories.categoriesForMovies:
         addCategoryToDB(category)
@@ -65,6 +60,7 @@ def retrieveMoviesAndPersonsFromCSV():
         print(row)
         addMovieToDB(row)
         addPersonToDB(row)
+        addAwardToDB(row)
 
     file.close()
 
@@ -75,8 +71,11 @@ def addAwardToDB(row):
         return
     title = getTitleFromRow(row)
     movie_id = movie.getMoviesByName(title)[0].id
+    category_id = categories.getCategoriesByName(category)[0].category_id
     year = getYearFromRow(row)
     won = getWonFromRow(row)
+    query = award.addAwardQuery(year, category_id, movie_id, won)
+    db_connector.insertToDB(query)
 
 
 def getWonFromRow(row):

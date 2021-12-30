@@ -27,16 +27,23 @@ def insertToDB(query):
             print(err.msg)
 
 
-class DBConnector:
-    cnx = mysql.connector.connect(
+def closeConnection():
+    DBConnector.cursor.close()
+    DBConnector.cnx.close()
+
+
+def openConnection():
+    DBConnector.cnx = mysql.connector.connect(
         host="localhost",
         user="DbMysql34",
         password="DbMysql34",
         port=3305
     )
+    DBConnector.cnx.database = DBConnector.DB_NAME
+    DBConnector.cursor = DBConnector.cnx.cursor()
 
+
+class DBConnector:
+    cnx = None
+    cursor = None
     DB_NAME = 'DbMysql34'
-
-    cnx.database = DB_NAME
-
-    cursor = cnx.cursor()
