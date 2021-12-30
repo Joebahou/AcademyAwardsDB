@@ -7,6 +7,25 @@ def isMovieExistsInDB(movieTitle):
     return len(movies) > 0
 
 
+def getMoviesByID(id):
+    query = """SELECT * FROM movie WHERE id = %s """ % id
+    movies_from_db = db_connector.getFromDB(query,1)
+    movie=None
+    for movie_from_db in movies_from_db:
+        movie = Movie(movie_from_db[0],
+                      movie_from_db[1],
+                      movie_from_db[2],
+                      movie_from_db[3],
+                      movie_from_db[4],
+                      movie_from_db[5],
+                      movie_from_db[6],
+                      movie_from_db[7],
+                      movie_from_db[8],
+                      movie_from_db[9],
+                      movie_from_db[10])
+
+    return movie
+
 def getMoviesByName(movieTitle):
     query = """SELECT * FROM movie WHERE title = "%s" """ % movieTitle
     movies_from_db = db_connector.getFromDB(query)
@@ -22,7 +41,7 @@ def getMoviesByName(movieTitle):
                       movie_from_db[7],
                       movie_from_db[8],
                       movie_from_db[9],
-                      movie_from_db[10],)
+                      movie_from_db[10])
         movies.append(movie)
     return movies
 
@@ -31,6 +50,10 @@ def getHighestMovieID():
     query = """SELECT MAX(id) FROM movie"""
     highest_id = db_connector.getFromDB(query)
     return utils.getNumOrZeroIfNone(highest_id)
+
+def getMoviesCount():
+    query=("SELECT COUNT(*) FROM movie")
+    return db_connector.getFromDB(query)
 
 
 class Movie:

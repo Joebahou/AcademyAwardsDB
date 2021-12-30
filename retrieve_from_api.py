@@ -12,4 +12,13 @@ import categories
 
 
 def retrieve_movies_and_cast():
+    addGenresToDB()
+
+    num_of_movies=movie.getMoviesCount()
+    for i in range(num_of_movies):
+        movie_=movie.getMoviesByID(i)
+        movie_.title
+
+
+def addGenresToDB():
     pass
