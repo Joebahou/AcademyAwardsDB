@@ -17,7 +17,9 @@ import api_data_retrieve
 import db_connector
 
 if __name__ == '__main__':
-    db_connector.openConnection()
-    # create_db_script.create_database_script(cursor, DB_NAME)
-    api_data_retrieve.retrieveMoviesAndPersonsFromCSV()
-    db_connector.closeConnection()
+    try:
+        db_connector.openConnection()
+        create_db_script.create_database_script(db_connector.DBConnector.cursor, db_connector.DBConnector.DB_NAME)
+        api_data_retrieve.retrieveMoviesAndPersonsFromCSV()
+    finally:
+        db_connector.closeConnection()

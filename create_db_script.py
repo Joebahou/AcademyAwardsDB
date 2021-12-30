@@ -56,9 +56,9 @@ def create_database_script(cursor, DB_NAME):
         ",movie_id INT NOT NULL,has_won BIT,FOREIGN KEY (oscar_category_id) REFERENCES oscarCategory(id),"
         "FOREIGN KEY (movie_id) REFERENCES movie(id))")
 
-    TABLES['award_person'] = ("CREATE TABLE award_person (award_id INT NOT NULL PRIMARY KEY,person_id INT NOT NULL,"
+    TABLES['award_person'] = ("CREATE TABLE award_person (award_id INT NOT NULL,person_id INT NOT NULL,"
                               "FOREIGN KEY (person_id) REFERENCES person(id),FOREIGN KEY (award_id) REFERENCES "
-                              "award(id) )")
+                              "award(id),PRIMARY KEY(award_id,person_id))")
 
     for table_name in TABLES:
         table_description = TABLES[table_name]

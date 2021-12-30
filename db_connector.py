@@ -10,10 +10,10 @@ def getFromDB(query, size=0):
         else:
             return DBConnector.cursor.fetchmany(size)
     except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-            print("already exists.")
-        else:
-            print(err.msg)
+        print("error in getFromDB:")
+        print(err.msg)
+        print("query: ", query)
+        return None
 
 
 def getLastInsertedId():
@@ -28,7 +28,9 @@ def insertToDB(query):
         if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
             print("already exists.")
         else:
+            print("error in insertToDB:")
             print(err.msg)
+            print("query: ", query)
 
 
 def closeConnection():
