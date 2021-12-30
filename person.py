@@ -15,7 +15,8 @@ def getPersonsByName(personName):
         person = Person(person_from_db[0],
                         person_from_db[1],
                         person_from_db[2],
-                        person_from_db[3])
+                        person_from_db[3],
+                        person_from_db[4],)
         persons.append(person)
     return persons
 
@@ -27,7 +28,8 @@ def getHighestPersonID():
 
 
 class Person:
-    def __init__(self, person_id, name, gender=None, original_name=None):
+    def __init__(self, person_id, name, gender=None, original_name=None, db_id=None):
+        self.db_id = db_id
         self.person_id = person_id
         self.name = name
         self.gender = gender

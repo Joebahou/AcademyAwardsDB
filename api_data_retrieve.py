@@ -2,42 +2,40 @@ import csv
 
 import award
 import categories
+import db_connector
 import movie
+import person
 from categories import *
 from person import getHighestPersonID, isPersonExistsInDB
+
+award_counter = 1
 
 
 def addMovieToDB(row):
     if not isInCategories(row[1]):
-        return 0
+        return
     title = getTitleFromRow(row)
     if not movie.isMovieExistsInDB(title):
-        movie_id = movie.getHighestMovieID() + 1
-        add_movie = """INSERT INTO movie (id,title) VALUES (%s,"%s")""" % (movie_id, title)
+        add_movie = """INSERT INTO movie (title) VALUES ("%s")""" % title
         db_connector.insertToDB(add_movie)
-        return movie_id
+        return
 
 
 def addPersonToDB(row):
     names = getPersonsFromRow(row)
-    person_ids = []
     if len(names) == 0:
-        return person_ids
+        return
 
-    highest_id = getHighestPersonID()
     for person in names:
         if not isPersonExistsInDB(person):
-            highest_id = highest_id + 1
-            add_person = """INSERT INTO person (id,name) VALUES (%s,"%s")""" % (highest_id, person)
+            add_person = """INSERT INTO person (name) VALUES ("%s")""" % person
             db_connector.insertToDB(add_person)
-            person_ids.append(highest_id)
-    return person_ids
+    return
 
 
 def addCategoryToDB(category):
     if not isCategoryExistsInDB(category):
-        highest_id = getHighestCategoryID()
-        add_category = """INSERT INTO oscarCategory (id,category) VALUES (%s,"%s")""" % (highest_id + 1, category)
+        add_category = """INSERT INTO oscarCategory (category) VALUES ("%s")""" % category
         db_connector.insertToDB(add_category)
 
 
@@ -76,6 +74,12 @@ def addAwardToDB(row):
     won = getWonFromRow(row)
     query = award.addAwardQuery(year, category_id, movie_id, won)
     db_connector.insertToDB(query)
+    persons = getPersonsFromRow(row)
+    award_id = db_connector.getLastInsertedId()
+    for person_db in persons:
+        person_id = person.getPersonsByName(person_db)[0].person_id
+        query = award.addAwardPersonQuery(award_id, person_id)
+        db_connector.insertToDB(query)
 
 
 def getWonFromRow(row):

@@ -21,7 +21,8 @@ def getMoviesByName(movieTitle):
                       movie_from_db[6],
                       movie_from_db[7],
                       movie_from_db[8],
-                      movie_from_db[9])
+                      movie_from_db[9],
+                      movie_from_db[10],)
         movies.append(movie)
     return movies
 
@@ -35,7 +36,8 @@ def getHighestMovieID():
 class Movie:
     def __init__(self, movie_id, title, budget=None, overview=None,
                  original_language="english", popularity=None,
-                 release_date=None, revenue=None, vote_average=None, vote_count=None):
+                 release_date=None, revenue=None, vote_average=None, vote_count=None, db_id=None):
+        self.db_id = db_id
         self.vote_count = vote_count
         self.vote_average = vote_average
         self.revenue = revenue
