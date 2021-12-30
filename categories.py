@@ -1,3 +1,6 @@
+import db_connector
+from utils import getNumOrZeroIfNone
+
 Animated_Feature_Film = "Animated Feature Film"
 Art_Direction = "Art Direction"
 Cinematography = "Cinematography"
@@ -21,6 +24,37 @@ Actor_Supporting_Role = "Actor -- Supporting Role"
 Actress_Leading_Role = "Actress -- Leading Role"
 Actress_Supporting_Role = "Actress -- Supporting Role"
 Directing = "Directing"
+
+
+def isInCategories(category):
+    return (category in Categories.categoriesForPerson) or (category in Categories.categoriesForMovies)
+
+
+def isCategoryExistsInDB(category):
+    categories = getCategoriesByName(category)
+    return len(categories) > 0
+
+
+def getCategoriesByName(category_name):
+    query = """SELECT * FROM oscarCategory WHERE category = "%s" """ % category_name
+    categories_from_db = db_connector.getFromDB(query)
+    categories = []
+    for cat in categories_from_db:
+        category = Category(cat[0], cat[1])
+        categories.append(category)
+    return categories
+
+
+def getHighestCategoryID():
+    query = """SELECT MAX(id) FROM oscarCategory"""
+    highest_id = db_connector.getFromDB(query, 1)
+    return getNumOrZeroIfNone(highest_id)
+
+
+class Category:
+    def __init__(self, category_id, name):
+        self.name = name
+        self.category_id = category_id
 
 
 class Categories:

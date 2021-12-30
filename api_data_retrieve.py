@@ -1,121 +1,101 @@
-import string
-
-import mysql
 import csv
 
-import mysql.connector
-from mysql.connector import errorcode
-
+import movie
 from categories import *
+from person import getHighestPersonID, isPersonExistsInDB
 
 
-class DBRetrieveData:
-    def __init__(self, cursor, cnx):
-        self.cursor = cursor
-        self.cnx = cnx
+def addMovieToDB(row):
+    if not isInCategories(row[1]):
+        return 0
+    title = getTitleFromRow(row)
+    if not movie.isMovieExistsInDB(title):
+        movie_id = movie.getHighestMovieID() + 1
+        add_movie = """INSERT INTO movie (id,title) VALUES (%s,"%s")""" % (movie_id, title)
+        db_connector.insertToDB(add_movie)
+        return movie_id
 
-    def getFromDB(self, query, size=0):
-        try:
-            self.cursor.execute(query)
-            if size == 0:
-                return self.cursor.fetchall()
-            else:
-                return self.cursor.fetchmany(size)
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("already exists.")
-            else:
-                print(err.msg)
 
-    def insertToDB(self, query):
-        try:
-            self.cursor.execute(query)
-            self.cnx.commit()
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("already exists.")
-            else:
-                print(err.msg)
+def addPersonToDB(row):
+    names = getPersonsFromRow(row)
+    person_ids = []
+    if len(names) == 0:
+        return person_ids
 
-    def retrieveMoviesAndPersonsFromCSV(self):
+    highest_id = getHighestPersonID()
+    for person in names:
+        if not isPersonExistsInDB(person):
+            highest_id = highest_id + 1
+            add_person = """INSERT INTO person (id,name) VALUES (%s,"%s")""" % (highest_id, person)
+            db_connector.insertToDB(add_person)
+            person_ids.append(highest_id)
+    return person_ids
 
-        self.addCategoriesToDB()
 
-        file = open("Salary_Data.csv")
-        csvreader = csv.reader(file)
-        header = next(csvreader)
-        print(header)
-        for row in csvreader:
-            self.addMovieToDB(row)
-            self.addMovieToDB(row)
-        file.close()
+def addCategoryToDB(category):
+    if not isCategoryExistsInDB(category):
+        highest_id = getHighestCategoryID()
+        add_category = """INSERT INTO oscarCategory (id,category) VALUES (%s,"%s")""" % (highest_id + 1, category)
+        db_connector.insertToDB(add_category)
 
-    def isMovieExistsInDB(self, movieTitle: string):
-        movies = self.getMoviesByName(movieTitle)
-        return len(movies) > 0
 
-    def isPersonExistsInDB(self, personName: string):
-        persons = self.getPersonsByName(personName)
-        return len(persons) > 0
+def addAwardToDB(year, category_id, movie_id, has_won):
+    add_category = """INSERT INTO award (year, oscar_category_id, movie_id, has_won)
+     VALUES (%s,%s,%s,%s)""" % \
+                   (year, category_id, movie_id, has_won)
+    db_connector.insertToDB(add_category)
 
-    def getMoviesByName(self, movieTitle: string):
-        query = """SELECT * FROM movie WHERE title = '%s'""" % movieTitle
-        return self.getFromDB(query)
 
-    def getPersonsByName(self, personName: string):
-        query = """SELECT * FROM person WHERE name = '%s'""" % personName
-        return self.getFromDB(query)
+def addCategoriesToDB():
+    for category in Categories.categoriesForMovies:
+        addCategoryToDB(category)
 
-    def addPersonToDB(self, row):
-        names = getPersonsFromRow(row)
-        if len(names) == 0:
-            return
+    for category in Categories.categoriesForPerson:
+        addCategoryToDB(category)
 
-        highestId = self.getHighestPersonID()
-        for person in names:
-            highestId = highestId + 1
-            if not self.isPersonExistsInDB(person):
-                add_person = "INSERT INTO person (person_id,name) VALUES (%s,'%s')" % (highestId, person)
-                self.insertToDB(add_person)
 
-    def addMovieToDB(self, row):
-        title = getTitleFromRow(row)
-        if not self.isMovieExistsInDB(title):
-            highestId = self.getHighestMovieID()
-            add_movie = """INSERT INTO movie (movie_id,title) VALUES (%s,'%s')""" % (highestId + 1, title)
-            self.insertToDB(add_movie)
+def retrieveMoviesAndPersonsFromCSV():
+    addCategoriesToDB()
 
-    def getHighestMovieID(self):
-        query = """SELECT MAX(movie_id) FROM movie"""
-        highestID = self.getFromDB(query)
-        return getNumOrZeroIfNone(highestID)
+    file = open("academy_awards.csv", encoding="utf8", errors="ignore")
+    csvreader = csv.reader(file)
+    header = next(csvreader)
+    print(header)
+    for row in csvreader:
+        print(row)
+        addMovieToDB(row)
+        addPersonToDB(row)
 
-    def getHighestPersonID(self):
-        query = """SELECT MAX(person_id) FROM person"""
-        highestID = self.getFromDB(query, 1)
-        return getNumOrZeroIfNone(highestID)
+    file.close()
 
-    def getHighestCategoryID(self):
-        query = """SELECT MAX(id) FROM oscar_category"""
-        highestID = self.getFromDB(query, 1)
-        return getNumOrZeroIfNone(highestID)
 
-    def addCategoriesToDB(self):
-        for category in Categories.categoriesForMovies:
-            self.addCategoryToDB(category)
+def addAwardToDB(row):
+    category = row[1]
+    if not isInCategories(category):
+        return
+    title = getTitleFromRow(row)
+    movie_id = movie.getMoviesByName(title)[0].id
+    year = getYearFromRow(row)
+    won = getWonFromRow(row)
 
-    def addCategoryToDB(self, category):
-        highestId = self.getHighestCategoryID()
-        add_category = """INSERT INTO oscar_category (id,category) VALUES (%s,'%s')""" % (highestId + 1, category)
-        self.insertToDB(add_category)
+
+def getWonFromRow(row):
+    if row[4] == "YES":
+        return 1
+    return 0
+
+
+def getYearFromRow(row):
+    return row[0].split(" (")[0]
 
 
 def getTitleFromRow(row):
     category = row[1]
     if (category in Categories.categoriesForMovies) or (category == Directing):
-        return row[2]
+        title = row[2]
     else:
-        return row[2].split(" {")[0]
+        title = row[3].split(" {")[0]
+    return title
 
 
 def getPersonsFromRow(row):
@@ -130,7 +110,7 @@ def getPersonsFromRow(row):
 
 
 def getNumOrZeroIfNone(num):
-    if num[0][0] == None:
+    if num[0][0] is None:
         return 0
     else:
         return num[0][0]
