@@ -1,6 +1,10 @@
+import requests
+
 import create_db_script
 import mysql.connector
 import api_data_retrieve
+import db_connector
+import retrieve_from_api
 
 # connecting to localhost, later to our server.
 
@@ -14,7 +18,7 @@ import api_data_retrieve
 
 
 # Press the green button in the gutter to run the script.
-import db_connector
+
 
 if __name__ == '__main__':
     try:
