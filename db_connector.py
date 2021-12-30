@@ -16,6 +16,10 @@ def getFromDB(query, size=0):
             print(err.msg)
 
 
+def getLastInsertedId():
+    return DBConnector.cursor.lastrowid
+
+
 def insertToDB(query):
     try:
         DBConnector.cursor.execute(query)
