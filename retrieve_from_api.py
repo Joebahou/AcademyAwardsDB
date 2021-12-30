@@ -9,16 +9,21 @@ from categories import *
 import movie
 import person
 import categories
+import job
 
+api_key = "12d3cdb961e65887562f143725ee1a2b"
 
 def retrieve_movies_and_cast():
-    addGenresToDB()
+    addJobsToDB()
 
-    num_of_movies=movie.getMoviesCount()
+    num_of_movies = movie.getMoviesCount()
     for i in range(num_of_movies):
-        movie_=movie.getMoviesByID(i)
-        movie_.title
+        movie_ = movie.getMoviesByID(i)
+        movie_title=movie_.title
+        movie_sql_id=movie_.id
 
 
-def addGenresToDB():
-    pass
+
+def addJobsToDB():
+    job.insertJobByName("Acting")
+    job.insertJobByName("Directing")

@@ -7,6 +7,10 @@ def addAwardQuery(year, category_id, movie_id, has_won):
 def addAwardPersonQuery(award_id, person_id):
     return """INSERT INTO award_person (award_id,person_id) VALUES(%s,%s)""" % (award_id, person_id)
 
+def getMovieAwardYear():
+    pass
+
+
 class Award:
     def __init__(self, year, category_id, movie_id, has_won, person=None, award_id=0):
         self.person = person
