@@ -26,6 +26,10 @@ def getMoviesByID(id):
 
     return movie
 
+def updateMovie(movie_db_id,budget, overview, original_language,popularity,release_date,revenue,vote_avg,vote_count,db_id):
+    sql = "UPDATE movie SET budget = %s WHERE address = %s"
+    val = ("Valley 345", "Canyon 123")
+
 def getMoviesByName(movieTitle):
     query = """SELECT * FROM movie WHERE title = "%s" """ % movieTitle
     movies_from_db = db_connector.getFromDB(query)
@@ -53,7 +57,7 @@ def getHighestMovieID():
 
 def getMoviesCount():
     query=("SELECT COUNT(*) FROM movie")
-    return db_connector.getFromDB(query)
+    return db_connector.getFromDB(query,1)[0][0]
 
 
 class Movie:
@@ -71,3 +75,9 @@ class Movie:
         self.id = movie_id
         self.title = title
         self.budget = budget
+
+
+def getLowestMovieID():
+    query = """SELECT MIN(id) FROM movie"""
+    highest_id = db_connector.getFromDB(query)
+    return utils.getNumOrZeroIfNone(highest_id)

@@ -2,7 +2,7 @@ import db_connector
 
 
 def insertJobByName(job):
-    query = """INSERT INTO jobInMovie (job_name) VALUES (%s)""" % job
+    query = """INSERT INTO jobInMovie (job_name) VALUES ("%s") """ % job
     return db_connector.insertToDB(query)
 
 def getJobByName(job):

@@ -31,6 +31,8 @@ def insertToDB(query):
             print("error in insertToDB:")
             print(err.msg)
             print("query: ", query)
+            # Rollback in case there is any error
+            DBConnector.cnx.rollback()
 
 
 def create_table(table_name, table_description):
