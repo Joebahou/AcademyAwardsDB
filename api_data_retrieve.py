@@ -2,11 +2,10 @@ import csv
 
 import award
 import categories
-import db_connector
 import movie
 import person
 from categories import *
-from person import getHighestPersonID, isPersonExistsInDB
+from person import isPersonExistsInDB
 
 award_counter = 1
 
@@ -26,11 +25,24 @@ def addPersonToDB(row):
     if len(names) == 0:
         return
 
-    for person in names:
-        if not isPersonExistsInDB(person):
-            add_person = """INSERT INTO person (name) VALUES ("%s")""" % person
+    for name in names:
+        if not isPersonExistsInDB(name):
+            checkRegularName(name)
+            add_person = """INSERT INTO person (name) VALUES ("%s")""" % name
             db_connector.insertToDB(add_person)
     return
+
+
+def checkRegularName(name):
+    not_regular_name = False
+    name_split = name.split(" ")
+    if len(name_split) > 2:
+        not_regular_name = True
+    for sub_name in name_split:
+        if not sub_name.isalpha():
+            not_regular_name = True
+    if not_regular_name:
+        print("****** not regular name: ", name)
 
 
 def addCategoryToDB(category):

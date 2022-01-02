@@ -18,8 +18,7 @@ def getPersonsByName(personName):
         person = Person(person_from_db[0],
                         person_from_db[1],
                         person_from_db[2],
-                        person_from_db[3],
-                        person_from_db[4],)
+                        person_from_db[3])
         persons.append(person)
     return persons
 
