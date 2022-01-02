@@ -62,7 +62,7 @@ def addCategoriesToDB():
 def retrieveMoviesAndPersonsFromCSV():
     addCategoriesToDB()
 
-    file = open("movies2.csv", encoding="utf8", errors="ignore")
+    file = open("academy_awards.csv", encoding="utf8", errors="ignore")
     csvreader = csv.reader(file)
     header = next(csvreader)
     print(header)
