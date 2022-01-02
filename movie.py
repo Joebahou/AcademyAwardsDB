@@ -72,7 +72,7 @@ def getLowestMovieID():
     return utils.getNumOrZeroIfNone(highest_id)
 
 
-def insert_revenue_and_genres(id,budget,revenue,genres,db_id):
+def insert_revenue_genres_company_prod(id,budget,revenue,genres,prod_companies,db_id):
     sql = "UPDATE movie SET budget = %s,revenue = %s WHERE db_id = %s"
     val = (budget,revenue,db_id)
     db_connector.insertToDBWithVal(sql,val)
@@ -84,6 +84,14 @@ def insert_revenue_and_genres(id,budget,revenue,genres,db_id):
         movie_genre_val = (id, genre_id)
         db_connector.insertToDBWithVal(genre_query,genre_val)
         db_connector.insertToDBWithVal(movie_genre_query, movie_genre_val)
+    prod_company_query="INSERT IGNORE INTO production_company (id,name) VALUES (%s,%s)"
+    movie_prod_company_query = "INSERT INTO movie_production_company (movie_id, production_company_id) VALUES (%s,%s)"
+    for prod_company in prod_companies:
+        prod_company_id=prod_company["id"]
+        prod_company_val = (prod_company_id,prod_company["name"])
+        movie_prod_company_val = (id, prod_company_id)
+        db_connector.insertToDBWithVal(prod_company_query,prod_company_val)
+        db_connector.insertToDBWithVal(movie_prod_company_query, movie_prod_company_val)
 
 
 class Movie:

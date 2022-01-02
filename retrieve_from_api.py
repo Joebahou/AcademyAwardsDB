@@ -101,7 +101,7 @@ def load_more_details_on_movie(movie_id,movie_db_id):
     link = "https://api.themoviedb.org/3/movie/" + str(movie_db_id) + "?api_key=" + api_key + "&language=en-US"
     response= requests.get(link)
     data = response.json()
-    movie.insert_revenue_and_genres(movie_id,data["budget"],data["revenue"],data["genres"],movie_db_id)
+    movie.insert_revenue_genres_company_prod(movie_id,data["budget"],data["revenue"],data["genres"],movie_db_id)
 
 
 def addJobsToDB():
