@@ -2,13 +2,26 @@ import csv
 
 import award
 import categories
-import db_connector
 import movie
 import person
 from categories import *
-from person import getHighestPersonID, isPersonExistsInDB
+from person import isPersonExistsInDB
 
-award_counter = 1
+
+def retrieveMoviesAndPersonsFromCSV():
+    addCategoriesToDB()
+
+    file = open("movies2.csv", encoding="utf8", errors="ignore")
+    csvreader = csv.reader(file)
+    header = next(csvreader)
+    print(header)
+    for row in csvreader:
+        print(row)
+        addMovieToDB(row)
+        addPersonToDB(row)
+        addAwardToDB(row)
+
+    file.close()
 
 
 def addMovieToDB(row):
@@ -26,11 +39,24 @@ def addPersonToDB(row):
     if len(names) == 0:
         return
 
-    for person in names:
-        if not isPersonExistsInDB(person):
-            add_person = """INSERT INTO person (name) VALUES ("%s")""" % person
+    for name in names:
+        if not isPersonExistsInDB(name):
+            checkRegularName(name)
+            add_person = """INSERT INTO person (name) VALUES ("%s")""" % name
             db_connector.insertToDB(add_person)
     return
+
+
+def checkRegularName(name):
+    not_regular_name = False
+    name_split = name.split(" ")
+    # if len(name_split) > 2:
+    #     not_regular_name = True
+    for sub_name in name_split:
+        if not sub_name.isalpha():
+            not_regular_name = True
+    if not_regular_name:
+        print("****** not regular name: ", name)
 
 
 def addCategoryToDB(category):
@@ -45,22 +71,6 @@ def addCategoriesToDB():
 
     for category in Categories.categoriesForPerson:
         addCategoryToDB(category)
-
-
-def retrieveMoviesAndPersonsFromCSV():
-    addCategoriesToDB()
-
-    file = open("academy_awards.csv", encoding="utf8", errors="ignore")
-    csvreader = csv.reader(file)
-    header = next(csvreader)
-    print(header)
-    for row in csvreader:
-        print(row)
-        addMovieToDB(row)
-        addPersonToDB(row)
-        addAwardToDB(row)
-
-    file.close()
 
 
 def addAwardToDB(row):
@@ -101,13 +111,16 @@ def getTitleFromRow(row):
     return title
 
 
+name_saparator = ' and '
+
+
 def getPersonsFromRow(row):
     category = row[1]
     if category in Categories.categoriesForPerson:
         if category == Directing:
-            return row[3].split(" and ")
+            return row[3].split(name_saparator)
         else:
-            return row[2].split(" and ")
+            return row[2].split(name_saparator)
     else:
         return []
 
