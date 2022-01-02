@@ -1,7 +1,7 @@
 TABLES = {}
 TABLES['movie'] = ("CREATE TABLE movie (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,title VARCHAR(150),"
-                   "budget INT,overview VARCHAR(500),original_language CHAR(45),"
-                   "popularity INT,release_date VARCHAR(45),revenue INT,"
+                   "budget INT(16),overview VARCHAR(1000),original_language CHAR(45),"
+                   "popularity INT,release_date DATE,revenue INT(16),"
                    "vote_average FLOAT,vote_count INT, db_id INT)")
 
 TABLES['genre'] = "CREATE TABLE genre (id INT NOT NULL PRIMARY KEY , genre VARCHAR(45))"
@@ -11,7 +11,7 @@ TABLES['movie_genre'] = ("CREATE TABLE movie_genre (movie_id INT NOT NULL, genre
                          "(genre_id) REFERENCES genre(id))")
 
 TABLES['person'] = ("CREATE TABLE person (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,name VARCHAR(45),gender INT,"
-                    "original_name VARCHAR(45), db_id INT )")
+                    "db_id INT )")
 
 TABLES['jobInMovie'] = "CREATE TABLE jobInMovie(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,job_name VARCHAR(45))"
 

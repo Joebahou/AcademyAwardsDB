@@ -26,9 +26,12 @@ def getMoviesByID(id):
 
     return movie
 
-def updateMovie(movie_db_id,budget, overview, original_language,popularity,release_date,revenue,vote_avg,vote_count,db_id):
-    sql = "UPDATE movie SET budget = %s WHERE address = %s"
-    val = ("Valley 345", "Canyon 123")
+def updateMovie(movie_id, overview, original_language,popularity,release_date,vote_avg,vote_count,db_id):
+    sql = "UPDATE movie SET overview = %s, original_language = %s, popularity = %s, release_date = %s" \
+          ", vote_average = %s, vote_count = %s, db_id = %s WHERE id = %s"
+    val = (overview,original_language, popularity, release_date, vote_avg, vote_count, db_id, movie_id)
+    db_connector.insertToDBWithVal(sql,val)
+
 
 def getMoviesByName(movieTitle):
     query = """SELECT * FROM movie WHERE title = "%s" """ % movieTitle
@@ -60,6 +63,29 @@ def getMoviesCount():
     return db_connector.getFromDB(query,1)[0][0]
 
 
+
+
+
+def getLowestMovieID():
+    query = """SELECT MIN(id) FROM movie"""
+    highest_id = db_connector.getFromDB(query)
+    return utils.getNumOrZeroIfNone(highest_id)
+
+
+def insert_revenue_and_genres(id,budget,revenue,genres,db_id):
+    sql = "UPDATE movie SET budget = %s,revenue = %s WHERE db_id = %s"
+    val = (budget,revenue,db_id)
+    db_connector.insertToDBWithVal(sql,val)
+    genre_query="INSERT IGNORE INTO genre (id,genre) VALUES (%s,%s)"
+    movie_genre_query = "INSERT INTO movie_genre (movie_id, genre_id) VALUES (%s,%s)"
+    for genre in genres:
+        genre_id=genre["id"]
+        genre_val = (genre_id,genre["name"])
+        movie_genre_val = (id, genre_id)
+        db_connector.insertToDBWithVal(genre_query,genre_val)
+        db_connector.insertToDBWithVal(movie_genre_query, movie_genre_val)
+
+
 class Movie:
     def __init__(self, movie_id, title, budget=None, overview=None,
                  original_language="english", popularity=None,
@@ -77,7 +103,9 @@ class Movie:
         self.budget = budget
 
 
-def getLowestMovieID():
-    query = """SELECT MIN(id) FROM movie"""
-    highest_id = db_connector.getFromDB(query)
-    return utils.getNumOrZeroIfNone(highest_id)
+
+
+
+
+
+

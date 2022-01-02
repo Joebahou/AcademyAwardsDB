@@ -2,13 +2,20 @@ import mysql.connector
 from mysql.connector import errorcode
 
 
-def getFromDB(query, size=0):
+def getFromDB(query,val=None, size=0):
     try:
-        DBConnector.cursor.execute(query)
-        if size == 0:
-            return DBConnector.cursor.fetchall()
+        if not val:
+            DBConnector.cursor.execute(query)
+            if size == 0:
+                return DBConnector.cursor.fetchall()
+            else:
+                return DBConnector.cursor.fetchmany(size)
         else:
-            return DBConnector.cursor.fetchmany(size)
+            DBConnector.cursor.execute(query,val)
+            if size == 0:
+                return DBConnector.cursor.fetchall()
+            else:
+                return DBConnector.cursor.fetchmany(size)
     except mysql.connector.Error as err:
         print("error in getFromDB:")
         print(err.msg)
@@ -34,6 +41,16 @@ def insertToDB(query):
             # Rollback in case there is any error
             DBConnector.cnx.rollback()
 
+def insertToDBWithVal(query,val):
+    try:
+        DBConnector.cursor.execute(query,val)
+        DBConnector.cnx.commit()
+    except mysql.connector.Error as err:
+            print("error in queryToDB:")
+            print(err.msg)
+            print("query: ", query)
+            # Rollback in case there is any error
+            DBConnector.cnx.rollback()
 
 def create_table(table_name, table_description):
     try:
