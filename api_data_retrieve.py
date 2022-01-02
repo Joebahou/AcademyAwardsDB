@@ -7,7 +7,21 @@ import person
 from categories import *
 from person import isPersonExistsInDB
 
-award_counter = 1
+
+def retrieveMoviesAndPersonsFromCSV():
+    addCategoriesToDB()
+
+    file = open("movies2.csv", encoding="utf8", errors="ignore")
+    csvreader = csv.reader(file)
+    header = next(csvreader)
+    print(header)
+    for row in csvreader:
+        print(row)
+        addMovieToDB(row)
+        addPersonToDB(row)
+        addAwardToDB(row)
+
+    file.close()
 
 
 def addMovieToDB(row):
@@ -36,8 +50,8 @@ def addPersonToDB(row):
 def checkRegularName(name):
     not_regular_name = False
     name_split = name.split(" ")
-    if len(name_split) > 2:
-        not_regular_name = True
+    # if len(name_split) > 2:
+    #     not_regular_name = True
     for sub_name in name_split:
         if not sub_name.isalpha():
             not_regular_name = True
@@ -57,22 +71,6 @@ def addCategoriesToDB():
 
     for category in Categories.categoriesForPerson:
         addCategoryToDB(category)
-
-
-def retrieveMoviesAndPersonsFromCSV():
-    addCategoriesToDB()
-
-    file = open("academy_awards.csv", encoding="utf8", errors="ignore")
-    csvreader = csv.reader(file)
-    header = next(csvreader)
-    print(header)
-    for row in csvreader:
-        print(row)
-        addMovieToDB(row)
-        addPersonToDB(row)
-        addAwardToDB(row)
-
-    file.close()
 
 
 def addAwardToDB(row):
@@ -113,13 +111,16 @@ def getTitleFromRow(row):
     return title
 
 
+name_saparator = ' and '
+
+
 def getPersonsFromRow(row):
     category = row[1]
     if category in Categories.categoriesForPerson:
         if category == Directing:
-            return row[3].split(" and ")
+            return row[3].split(name_saparator)
         else:
-            return row[2].split(" and ")
+            return row[2].split(name_saparator)
     else:
         return []
 
