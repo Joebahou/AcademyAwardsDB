@@ -23,7 +23,7 @@ if __name__ == '__main__':
         # create_db_script.create_database_script()
         # api_data_retrieve.retrieveMoviesAndPersonsFromCSV()
         # retrieve_from_api.addJobsToDB()
-        retrieve_from_api.retrieve_movies_and_cast()
+        #retrieve_from_api.retrieve_movies_and_cast()
         #retrieve_from_api.helper()
     finally:
         db_connector.closeConnection()
