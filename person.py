@@ -50,8 +50,8 @@ def getPersonByID(id):
 
 
 def checkPersonByDBID(db_id, name, original_name):
-    query=("SELECT id FROM person WHERE (name=%s and  db_id =%s) or (name=%s and  db_id =%s)")
-    val=(name,db_id,original_name,db_id)
+    query=("SELECT id FROM person WHERE name=%s or name=%s or db_id =%s")
+    val=(name,original_name,db_id)
     id=db_connector.getFromDB(query,val,1)
     if id:
         return id[0][0]

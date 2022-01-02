@@ -16,10 +16,12 @@ def retrieve_person():
     start= person.getLowestPersonID()
     for id in range(start,start+num_of_person):
         person_entry= person.getPersonByID(id)
+        if not person_entry:
+            continue
         person_name=person_entry.name
+        person_name = person_name.strip()
         person_name_link=person_name.replace(" ","%20")
         person_name = person_name.lower()
-        person_name=person_name.strip()
         person_link="https://api.themoviedb.org/3/search/person?api_key="+api_key +"&language=en-US&query="+person_name_link+"&page=1&include_adult=true"
         response_person = requests.get(person_link)
         data_p=response_person.json()
@@ -28,7 +30,8 @@ def retrieve_person():
             n=d["name"].strip()
             n= n.lower()
             n=unidecode(n)
-            if (n == person_name and d["gender"] != 0 and (d["known_for_department"]=="Directing" or d["known_for_department"]=="Acting" )):
+            if (fuzz.ratio(n, person_name) >= 90 and d["gender"]!=0):
+
                 person_db_id = d["id"]
                 person_gender=d["gender"]
                 person.updatePerson(id,person_gender,person_db_id)
@@ -43,8 +46,6 @@ def retrieve_person():
 
 
 def retrieve_movies_and_cast():
-
-
     num_of_movies = movie.getMoviesCount()
     start=movie.getLowestMovieID()
     movie_title=""
@@ -70,7 +71,7 @@ def retrieve_movies_and_cast():
             n=n.lower()
             n=unidecode(n)
             n = n.translate({ord(c): None for c in '!@#$:'})
-            if (fuzz.ratio(movie_title,n)>=90 or fuzz.ratio(movie_title_db,n)>=90) and (not matched_in_db):
+            if (fuzz.ratio(movie_title,n)>=90 or fuzz.ratio(movie_title_db,n)>=90) :
                 movie_db_id=d["id"]
 
                 movie.updateMovie(i,d["overview"],d["original_language"],d["popularity"],d["release_date"]
@@ -111,10 +112,8 @@ def addJobsToDB():
 
 
 def helper():
-    link_for_movie = "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&query=" + "...And%20Justice%20for%20All" \
-                     + "&page=1&include_adult=false&year=" + str(1979) + "&primary_release_year=" + str(
-        1979)
-    response = requests.get(link_for_movie)
+    person_link = "https://api.themoviedb.org/3/search/person?api_key=" + api_key + "&language=en-US&query=Grace%20Moore&page=1&include_adult=true"
+    response = requests.get(person_link)
     data = response.json()
     d=data["results"]
     n=d[0]["title"].strip()
