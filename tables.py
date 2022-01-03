@@ -2,7 +2,7 @@ TABLES = {}
 TABLES['movie'] = ("CREATE TABLE movie (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,title VARCHAR(150),"
                    "budget INT(16),overview VARCHAR(1000),original_language CHAR(45),"
                    "popularity INT,release_date DATE,revenue INT(16),"
-                   "vote_average FLOAT,vote_count INT, db_id INT)")
+                   "vote_average FLOAT,vote_count INT, db_id INT,imdb_id CHAR(50) )")
 
 TABLES['genre'] = "CREATE TABLE genre (id INT NOT NULL PRIMARY KEY , genre VARCHAR(45))"
 

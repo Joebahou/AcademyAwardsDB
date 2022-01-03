@@ -22,7 +22,8 @@ def getMoviesByID(id):
                       movie_from_db[7],
                       movie_from_db[8],
                       movie_from_db[9],
-                      movie_from_db[10])
+                      movie_from_db[10],
+                      movie_from_db[11])
 
     return movie
 
@@ -48,7 +49,8 @@ def getMoviesByName(movieTitle):
                       movie_from_db[7],
                       movie_from_db[8],
                       movie_from_db[9],
-                      movie_from_db[10])
+                      movie_from_db[10],
+                      movie_from_db[11])
         movies.append(movie)
     return movies
 
@@ -94,10 +96,15 @@ def insert_revenue_genres_company_prod(id,budget,revenue,genres,prod_companies,d
         db_connector.insertToDBWithVal(movie_prod_company_query, movie_prod_company_val)
 
 
+def insert_imdb(movie_id, imdb_id):
+    sql = "UPDATE movie SET imdb_id = %s WHERE id = %s"
+    val=(imdb_id,movie_id)
+    db_connector.insertToDBWithVal(sql, val)
+
 class Movie:
     def __init__(self, movie_id, title, budget=None, overview=None,
                  original_language="english", popularity=None,
-                 release_date=None, revenue=None, vote_average=None, vote_count=None, db_id=None):
+                 release_date=None, revenue=None, vote_average=None, vote_count=None, db_id=None, imdb_id=None):
         self.db_id = db_id
         self.vote_count = vote_count
         self.vote_average = vote_average
@@ -109,11 +116,25 @@ class Movie:
         self.id = movie_id
         self.title = title
         self.budget = budget
+        self.imdb_id = imdb_id
 
 
-
-
-
-
-
-
+def getMoviesFromDate(date):
+    query="""SELECT * FROM movie where release_date>="%s" """ %date
+    movies_from_db=db_connector.getFromDB(query)
+    movies = []
+    for movie_from_db in movies_from_db:
+        movie = Movie(movie_from_db[0],
+                      movie_from_db[1],
+                      movie_from_db[2],
+                      movie_from_db[3],
+                      movie_from_db[4],
+                      movie_from_db[5],
+                      movie_from_db[6],
+                      movie_from_db[7],
+                      movie_from_db[8],
+                      movie_from_db[9],
+                      movie_from_db[10],
+                      movie_from_db[11])
+        movies.append(movie)
+    return movies
