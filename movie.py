@@ -9,8 +9,8 @@ def isMovieExistsInDB(movieTitle):
 
 def getMoviesByID(id):
     query = """SELECT * FROM movie WHERE id = %s """ % id
-    movies_from_db = db_connector.getFromDB(query,1)
-    movie=None
+    movies_from_db = db_connector.getFromDB(query, 1)
+    movie = None
     for movie_from_db in movies_from_db:
         movie = Movie(movie_from_db[0],
                       movie_from_db[1],
@@ -27,11 +27,12 @@ def getMoviesByID(id):
 
     return movie
 
-def updateMovie(movie_id, overview, original_language,popularity,release_date,vote_avg,vote_count,db_id):
+
+def updateMovie(movie_id, overview, original_language, popularity, release_date, vote_avg, vote_count, db_id):
     sql = "UPDATE movie SET overview = %s, original_language = %s, popularity = %s, release_date = %s" \
           ", vote_average = %s, vote_count = %s, db_id = %s WHERE id = %s"
-    val = (overview,original_language, popularity, release_date, vote_avg, vote_count, db_id, movie_id)
-    db_connector.insertToDBWithVal(sql,val)
+    val = (overview, original_language, popularity, release_date, vote_avg, vote_count, db_id, movie_id)
+    db_connector.insertToDBWithVal(sql, val)
 
 
 def getMoviesByName(movieTitle):
@@ -60,12 +61,10 @@ def getHighestMovieID():
     highest_id = db_connector.getFromDB(query)
     return utils.getNumOrZeroIfNone(highest_id)
 
+
 def getMoviesCount():
-    query=("SELECT COUNT(*) FROM movie")
-    return db_connector.getFromDB(query,1)[0][0]
-
-
-
+    query = ("SELECT COUNT(*) FROM movie")
+    return db_connector.getFromDB(query, 1)[0][0]
 
 
 def getLowestMovieID():
@@ -74,32 +73,33 @@ def getLowestMovieID():
     return utils.getNumOrZeroIfNone(highest_id)
 
 
-def insert_revenue_genres_company_prod(id,budget,revenue,genres,prod_companies,db_id):
+def insert_revenue_genres_company_prod(id, budget, revenue, genres, prod_companies, db_id):
     sql = "UPDATE movie SET budget = %s,revenue = %s WHERE db_id = %s"
-    val = (budget,revenue,db_id)
-    db_connector.insertToDBWithVal(sql,val)
-    genre_query="INSERT IGNORE INTO genre (id,genre) VALUES (%s,%s)"
+    val = (budget, revenue, db_id)
+    db_connector.insertToDBWithVal(sql, val)
+    genre_query = "INSERT IGNORE INTO genre (id,genre) VALUES (%s,%s)"
     movie_genre_query = "INSERT INTO movie_genre (movie_id, genre_id) VALUES (%s,%s)"
     for genre in genres:
-        genre_id=genre["id"]
-        genre_val = (genre_id,genre["name"])
+        genre_id = genre["id"]
+        genre_val = (genre_id, genre["name"])
         movie_genre_val = (id, genre_id)
-        db_connector.insertToDBWithVal(genre_query,genre_val)
+        db_connector.insertToDBWithVal(genre_query, genre_val)
         db_connector.insertToDBWithVal(movie_genre_query, movie_genre_val)
-    prod_company_query="INSERT IGNORE INTO production_company (id,name) VALUES (%s,%s)"
+    prod_company_query = "INSERT IGNORE INTO production_company (id,name) VALUES (%s,%s)"
     movie_prod_company_query = "INSERT INTO movie_production_company (movie_id, production_company_id) VALUES (%s,%s)"
     for prod_company in prod_companies:
-        prod_company_id=prod_company["id"]
-        prod_company_val = (prod_company_id,prod_company["name"])
+        prod_company_id = prod_company["id"]
+        prod_company_val = (prod_company_id, prod_company["name"])
         movie_prod_company_val = (id, prod_company_id)
-        db_connector.insertToDBWithVal(prod_company_query,prod_company_val)
+        db_connector.insertToDBWithVal(prod_company_query, prod_company_val)
         db_connector.insertToDBWithVal(movie_prod_company_query, movie_prod_company_val)
 
 
 def insert_imdb(movie_id, imdb_id):
     sql = "UPDATE movie SET imdb_id = %s WHERE id = %s"
-    val=(imdb_id,movie_id)
+    val = (imdb_id, movie_id)
     db_connector.insertToDBWithVal(sql, val)
+
 
 class Movie:
     def __init__(self, movie_id, title, budget=None, overview=None,
@@ -120,8 +120,29 @@ class Movie:
 
 
 def getMoviesFromDate(date):
-    query="""SELECT * FROM movie where release_date>="%s" """ %date
-    movies_from_db=db_connector.getFromDB(query)
+    query = """SELECT * FROM movie where release_date>="%s" """ % date
+    movies_from_db = db_connector.getFromDB(query)
+    movies = []
+    for movie_from_db in movies_from_db:
+        movie = Movie(movie_from_db[0],
+                      movie_from_db[1],
+                      movie_from_db[2],
+                      movie_from_db[3],
+                      movie_from_db[4],
+                      movie_from_db[5],
+                      movie_from_db[6],
+                      movie_from_db[7],
+                      movie_from_db[8],
+                      movie_from_db[9],
+                      movie_from_db[10],
+                      movie_from_db[11])
+        movies.append(movie)
+    return movies
+
+
+def getMoviesDateNull():
+    query = """SELECT * FROM movie where release_date is null"""
+    movies_from_db = db_connector.getFromDB(query)
     movies = []
     for movie_from_db in movies_from_db:
         movie = Movie(movie_from_db[0],
