@@ -1,4 +1,5 @@
 import db_connector
+import movie
 import utils
 
 
@@ -159,3 +160,11 @@ def getMoviesDateNull():
                       movie_from_db[11])
         movies.append(movie)
     return movies
+
+
+def update_revenue_genres_company_prod(id, budget, revenue, genres, prod_companies, db_id):
+    sql_g = """DELETE FROM movie_genre WHERE movie_id = %s""" % id
+    db_connector.insertToDBWithVal(sql_g)
+    sql_p = """DELETE FROM movie_production_company WHERE movie_id = %s""" % id
+    db_connector.insertToDBWithVal(sql_g)
+    movie.insert_revenue_genres_company_prod(id, budget, revenue, genres, prod_companies, db_id)

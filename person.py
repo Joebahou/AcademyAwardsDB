@@ -1,6 +1,7 @@
 from unidecode import unidecode
 
 import db_connector
+import person
 import utils
 from utils import getNumOrZeroIfNone
 
@@ -96,6 +97,7 @@ def load_cast_and_crew(movie_id,cast, crew):
                 createPerson(name,crew_member["gender"],crew_member["id"])
                 person_id=db_connector.getLastInsertedId()
             addPersonMovieJob(person_id,movie_id,2)
+            break
 
 
 
@@ -113,4 +115,7 @@ class Person:
         self.gender = gender
 
 
-
+def load_new_cast_and_crew(movie_id,cast, crew):
+    sql= """DELETE FROM person_movie_job WHERE movie_id = %s""" %movie_id
+    db_connector.insertToDBWithVal(sql)
+    person.load_cast_and_crew(movie_id,cast,crew)
