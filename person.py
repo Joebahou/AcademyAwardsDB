@@ -1,6 +1,7 @@
 from unidecode import unidecode
 
 import db_connector
+import person
 import utils
 from utils import getNumOrZeroIfNone
 
@@ -51,9 +52,10 @@ def getPersonByID(id_):
 
 
 def checkPersonByDBID(db_id, name, original_name):
-    query = ("SELECT id FROM person WHERE (name=%s and  db_id =%s) or (name=%s and  db_id =%s)")
-    val = (name, db_id, original_name, db_id)
-    id = db_connector.getFromDB(query, val, 1)
+
+    query=("SELECT id FROM person WHERE name=%s or name=%s or db_id =%s")
+    val=(name,original_name,db_id)
+    id=db_connector.getFromDB(query,val,1)
     if id:
         return id[0][0]
     return None
@@ -94,9 +96,13 @@ def load_cast_and_crew(movie_id, cast, crew):
         if crew_member["department"] == "Directing":
             person_id = checkPersonByDBID(crew_member["id"], name, original_name)
             if not person_id:
-                createPerson(name, crew_member["gender"], crew_member["id"])
-                person_id = db_connector.getLastInsertedId()
-            addPersonMovieJob(person_id, movie_id, 2)
+
+                createPerson(name,crew_member["gender"],crew_member["id"])
+                person_id=db_connector.getLastInsertedId()
+            addPersonMovieJob(person_id,movie_id,2)
+            break
+
+
 
 
 def updatePerson(id, person_gender, person_db_id):
@@ -111,3 +117,10 @@ class Person:
         self.person_id = person_id
         self.name = name
         self.gender = gender
+
+
+
+def load_new_cast_and_crew(movie_id,cast, crew):
+    sql= """DELETE FROM person_movie_job WHERE movie_id = %s""" %movie_id
+    db_connector.insertToDBWithVal(sql)
+    person.load_cast_and_crew(movie_id,cast,crew)

@@ -26,6 +26,9 @@ def getFromDB(query, val=None, size=0):
 def getLastInsertedId():
     return DBConnector.cursor.lastrowid
 
+def rowcount():
+    return DBConnector.cursor.rowcount
+
 
 def insertToDB(query):
     try:
@@ -42,17 +45,27 @@ def insertToDB(query):
             DBConnector.cnx.rollback()
 
 
-def insertToDBWithVal(query, val):
-    try:
-        DBConnector.cursor.execute(query, val)
-        DBConnector.cnx.commit()
-    except mysql.connector.Error as err:
-        print("error in queryToDB:")
-        print(err.msg)
-        print("query: ", query)
-        # Rollback in case there is any error
-        DBConnector.cnx.rollback()
-
+def insertToDBWithVal(query,val=None):
+    if val is None:
+        try:
+            DBConnector.cursor.execute(query)
+            DBConnector.cnx.commit()
+        except mysql.connector.Error as err:
+            print("error in queryToDB:")
+            print(err.msg)
+            print("query: ", query)
+            # Rollback in case there is any error
+            DBConnector.cnx.rollback()
+    else:
+        try:
+            DBConnector.cursor.execute(query,val)
+            DBConnector.cnx.commit()
+        except mysql.connector.Error as err:
+                print("error in queryToDB:")
+                print(err.msg)
+                print("query: ", query)
+                # Rollback in case there is any error
+                DBConnector.cnx.rollback()
 
 def create_table(table_name, table_description):
     try:

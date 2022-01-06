@@ -2,7 +2,7 @@ TABLES = {}
 TABLES['movie'] = ("CREATE TABLE movie (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,title VARCHAR(150),"
                    "budget INT(16),overview VARCHAR(1000),original_language CHAR(45),"
                    "popularity INT,release_date DATE,revenue INT(16),"
-                   "vote_average FLOAT,vote_count INT, db_id INT)")
+                   "vote_average FLOAT,vote_count INT, db_id INT,imdb_id CHAR(50) )")
 
 TABLES['genre'] = "CREATE TABLE genre (id INT NOT NULL PRIMARY KEY , genre VARCHAR(45))"
 
@@ -32,7 +32,7 @@ TABLES['award_person'] = ("CREATE TABLE award_person (award_id INT NOT NULL,pers
                           "FOREIGN KEY (person_id) REFERENCES person(id),FOREIGN KEY (award_id) REFERENCES "
                           "award(id),PRIMARY KEY (award_id,person_id))")
 
-TABLES['production_company']="CREATE TABLE production_company (id INT(16) NOT NULL PRIMARY KEY , name VARCHAR(100))"
+TABLES['production_company']="CREATE TABLE production_company (id INT NOT NULL PRIMARY KEY , name VARCHAR(100))"
 
 
 TABLES['movie_production_company'] = ("CREATE TABLE movie_production_company (movie_id INT NOT NULL, production_company_id INT NOT NULL, PRIMARY KEY"
