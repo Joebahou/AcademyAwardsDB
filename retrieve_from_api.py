@@ -78,67 +78,63 @@ def load_new_details_on_movie(movie_id, movie_db_id):
                                              data["production_companies"], movie_db_id)
 
 
-def another_fix():
-    movies_ids=[3343]
-    
-    for movie_id in movies_ids:
-        movie_ = movie.getMoviesByID(movie_id)
-        movie_title_db = str(movie_.title)
-        movie_title = movie_title_db.replace("&", "and").split(" (")[0]
-        movie_title_link = movie_title.replace(" ", "%20")
-        # movie_title_link_between = re.search("\((.*?)\)", movie_title_link)
-        # if not movie_title_link_between is None:
-        #     movie_title_link = movie_title_link_between.group(1)
-        movie_title = movie_title.lower().strip()
-        # movie_title = movie_title.translate({ord(c): None for c in '!@#$:'})
-        movie_sql_id = movie_.id
-        nomination_year = award.getMovieAwardYear(movie_sql_id)
-        link_for_movie = "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&query=" + movie_title_link \
-                         + "&page=1&include_adult=false"
-        response_movie = requests.get(link_for_movie)
-        data_movie = response_movie.json()
-        matched_in_db = False
-        movie_db_id = 0
-        print("sql movie: " + movie_title + ", " + str(nomination_year))
-        for d in data_movie["results"]:
-            n = d["title"]
-            n_original = d["original_title"].lower()
-            n = n.strip()
-            n = n.lower()
-            n = unidecode(n)
-            n = n.translate({ord(c): None for c in '!@#$:'})
-            n_opt = n.replace("&", "and")
-            n = n.translate({ord(c): None for c in '!@#$:'})
-            sql_list = [movie_title, movie_title_db]
-            all_movie_titles = movie_title.split("(")
-            if len(all_movie_titles) > 1:
-                sql_list.append(all_movie_titles[1])
-            api_list = [n, n_opt, n_original]
-            # if fuzz.ratio(movie_title, n) >= 90 or fuzz.ratio(movie_title_db, n) >= 90 or fuzz.ratio(movie_title,
-            #                                                                                          n_opt) >= 90 \
-            #         or fuzz.ratio(movie_title_db, n_opt) >= 90 or fuzz.ratio(movie_title, n_original) >= 90 \
-            #         or fuzz.ratio(movie_title_db, n_original) >= 90:
-            if isSimilar(sql_list, api_list):
-                if len(d["release_date"]) > 0:
-                    realese_date = datetime.strptime(d["release_date"], '%Y-%m-%d').year
-                    if abs(nomination_year - realese_date) <= 2:
-                        movie_db_id = d["id"]
-                        movie.updateMovie(movie_sql_id, d["overview"], d["original_language"], d["popularity"],
-                                          d["release_date"]
-                                          , d["vote_average"], d["vote_count"], movie_db_id)
-                        matched_in_db = True
-                        break
-
-            print("sql movie: " + movie_title + ", " + str(nomination_year) +
-                  " \t, db movie: " + n + ", " + str(d["release_date"]))
-
-        if not matched_in_db:
-            print("the movie " + movie_title + " was not found in api, please check why, not updating in sql, id= "
-                  + str(movie_sql_id) + "nomination year = " + str(nomination_year))
-
-        else:
-            load_new_details_on_movie(movie_sql_id, movie_db_id)
-            load_new_cast_and_crew(movie_sql_id, movie_db_id)
+# def another_fix():
+#     movies_ids=[3343]
+#
+#     for movie_id in movies_ids:
+#         movie_ = movie.getMoviesByID(movie_id)
+#         movie_title_db = str(movie_.title)
+#         movie_title = movie_title_db.replace("&", "and").split(" (")[0]
+#         movie_title_link = movie_title.replace(" ", "%20")
+#         movie_title = movie_title.lower().strip()
+#         movie_sql_id = movie_.id
+#         nomination_year = award.getMovieAwardYear(movie_sql_id)
+#         link_for_movie = "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&query=" + movie_title_link \
+#                          + "&page=1&include_adult=false"
+#         response_movie = requests.get(link_for_movie)
+#         data_movie = response_movie.json()
+#         matched_in_db = False
+#         movie_db_id = 0
+#         print("sql movie: " + movie_title + ", " + str(nomination_year))
+#         for d in data_movie["results"]:
+#             n = d["title"]
+#             n_original = d["original_title"].lower()
+#             n = n.strip()
+#             n = n.lower()
+#             n = unidecode(n)
+#             n = n.translate({ord(c): None for c in '!@#$:'})
+#             n_opt = n.replace("&", "and")
+#             n = n.translate({ord(c): None for c in '!@#$:'})
+#             sql_list = [movie_title, movie_title_db]
+#             all_movie_titles = movie_title.split("(")
+#             if len(all_movie_titles) > 1:
+#                 sql_list.append(all_movie_titles[1])
+#             api_list = [n, n_opt, n_original]
+#             # if fuzz.ratio(movie_title, n) >= 90 or fuzz.ratio(movie_title_db, n) >= 90 or fuzz.ratio(movie_title,
+#             #                                                                                          n_opt) >= 90 \
+#             #         or fuzz.ratio(movie_title_db, n_opt) >= 90 or fuzz.ratio(movie_title, n_original) >= 90 \
+#             #         or fuzz.ratio(movie_title_db, n_original) >= 90:
+#             if isSimilar(sql_list, api_list):
+#                 if len(d["release_date"]) > 0:
+#                     realese_date = datetime.strptime(d["release_date"], '%Y-%m-%d').year
+#                     if abs(nomination_year - realese_date) <= 2:
+#                         movie_db_id = d["id"]
+#                         movie.updateMovie(movie_sql_id, d["overview"], d["original_language"], d["popularity"],
+#                                           d["release_date"]
+#                                           , d["vote_average"], d["vote_count"], movie_db_id)
+#                         matched_in_db = True
+#                         break
+#
+#             print("sql movie: " + movie_title + ", " + str(nomination_year) +
+#                   " \t, db movie: " + n + ", " + str(d["release_date"]))
+#
+#         if not matched_in_db:
+#             print("the movie " + movie_title + " was not found in api, please check why, not updating in sql, id= "
+#                   + str(movie_sql_id) + "nomination year = " + str(nomination_year))
+#
+#         else:
+#             load_new_details_on_movie(movie_sql_id, movie_db_id)
+#             load_new_cast_and_crew(movie_sql_id, movie_db_id)
     
 
 def fix_retrival():
@@ -150,11 +146,7 @@ def fix_retrival():
         movie_title_db = str(movie_.title)
         movie_title = movie_title_db.replace("&", "and").split(" (")[0]
         movie_title_link = movie_title.replace(" ", "%20")
-        # movie_title_link_between = re.search("\((.*?)\)", movie_title_link)
-        # if not movie_title_link_between is None:
-        #     movie_title_link = movie_title_link_between.group(1)
         movie_title = movie_title.lower().strip()
-        # movie_title = movie_title.translate({ord(c): None for c in '!@#$:'})
         movie_sql_id = movie_.id
         nomination_year = award.getMovieAwardYear(movie_sql_id)
         link_for_movie = "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&query=" + movie_title_link \
@@ -178,10 +170,6 @@ def fix_retrival():
             if len(all_movie_titles) > 1:
                 sql_list.append(all_movie_titles[1])
             api_list = [n, n_opt, n_original]
-            # if fuzz.ratio(movie_title, n) >= 90 or fuzz.ratio(movie_title_db, n) >= 90 or fuzz.ratio(movie_title,
-            #                                                                                          n_opt) >= 90 \
-            #         or fuzz.ratio(movie_title_db, n_opt) >= 90 or fuzz.ratio(movie_title, n_original) >= 90 \
-            #         or fuzz.ratio(movie_title_db, n_original) >= 90:
             if isSimilar(sql_list, api_list):
                 if len(d["release_date"]) > 0:
                     realese_date = datetime.strptime(d["release_date"], '%Y-%m-%d').year
@@ -248,11 +236,15 @@ def retrieve_movies_and_cast():
                     or fuzz.ratio(movie_title_db, n_original) >= 70 or n_original.find(movie_title) or movie_title.find(
                 n_original):
 
-                movie_db_id = d["id"]
-                movie.updateMovie(i, d["overview"], d["original_language"], d["popularity"], d["release_date"]
-                                  , d["vote_average"], d["vote_count"], movie_db_id)
-                matched_in_db = True
-                break
+                if len(d["release_date"]) > 0:
+                    realese_date = datetime.strptime(d["release_date"], '%Y-%m-%d').year
+                    if abs(nomination_year - realese_date) <= 2:
+                        movie_db_id = d["id"]
+                        movie.updateMovie(movie_sql_id, d["overview"], d["original_language"], d["popularity"],
+                                          d["release_date"]
+                                          , d["vote_average"], d["vote_count"], movie_db_id)
+                        matched_in_db = True
+                        break
             else:
                 print("sql movie name = " + movie_title + " , db movie name = " + n)
 
@@ -321,9 +313,3 @@ def helper():
 
 
 
-
-
-# no need for that now
-def update_db():
-    q = "ALTER TABLE movie CHANGE COLUMN release_date release_date DATE NULL DEFAULT NULL "
-    db_connector.insertToDB(q)

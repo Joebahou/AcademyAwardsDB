@@ -25,8 +25,7 @@ if __name__ == '__main__':
         # retrieve_from_api.addJobsToDB()
         #retrieve_from_api.retrieve_movies_and_cast()
         #retrieve_from_api.retrive_movie_imdb_id()
-        #retrieve_from_api.fix_retrival()
         retrieve_from_api.helper()
-        #retrieve_from_api.another_fix()
+
     finally:
         db_connector.closeConnection()

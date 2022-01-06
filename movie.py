@@ -1,5 +1,5 @@
 import db_connector
-import movie
+
 import utils
 
 
@@ -61,6 +61,8 @@ def getHighestMovieID():
     query = """SELECT MAX(id) FROM movie"""
     highest_id = db_connector.getFromDB(query)
     return utils.getNumOrZeroIfNone(highest_id)
+
+
 
 
 def getMoviesCount():
@@ -167,4 +169,4 @@ def update_revenue_genres_company_prod(id, budget, revenue, genres, prod_compani
     db_connector.insertToDBWithVal(sql_g)
     sql_p = """DELETE FROM movie_production_company WHERE movie_id = %s""" % id
     db_connector.insertToDBWithVal(sql_g)
-    movie.insert_revenue_genres_company_prod(id, budget, revenue, genres, prod_companies, db_id)
+    insert_revenue_genres_company_prod(id, budget, revenue, genres, prod_companies, db_id)

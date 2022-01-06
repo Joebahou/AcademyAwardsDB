@@ -26,6 +26,9 @@ def getFromDB(query,val=None, size=0):
 def getLastInsertedId():
     return DBConnector.cursor.lastrowid
 
+def rowcount():
+    return DBConnector.cursor.rowcount
+
 
 def insertToDB(query):
     try:
