@@ -8,6 +8,7 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import string
 import movie_query
+import oscar_query
 
 if __name__ == '__main__':
 
@@ -26,7 +27,9 @@ if __name__ == '__main__':
         # retrieve_from_api.addJobsToDB()
         #retrieve_from_api.retrieve_movies_and_cast()
         #retrieve_from_api.retrive_movie_imdb_id()
-        movie_query.num_of_wins_for_each_genre()
+        #movie_query.num_of_wins_for_each_genre()
+        oscar_query.getMovieMaxBudget(max_year=2010,only_winners=True)
+
         #retrieve_from_api.helper()
 
     finally:

@@ -1,43 +1,28 @@
 import db_connector
+import utils
 
 
-def getMovieMaxBudget(min_year,max_year,only_winners=False,categories_list=[],genres_list=[]):
-    min_year_query=getQueryAwardMinYear(min_year)
-    max_year_query=getQueryAwardMaxYear(max_year)
-    genre_query=getQueryGenres(genres_list)
-    category_query=getQueryCategories(categories_list)
-    query="""SELECT title,budget  FROM movie as m,award as a WHERE m.id=a.movie_id and  """
-
-
-
-
-
-def getQueryGenres(genres):
-    if len(genres) > 0:
-        query_genre = "AND ("
-        for genre_id in genres:
-            query_genre += f"""movie_genre.genre_id = {genre_id} OR """
-        query_genre = query_genre[:-4] + ")\n"
-        return query_genre
+def getFromGenre(is_exist):
+    if is_exist:
+        return """, genre , movie_genre  """
     return ""
 
 
-def getQueryCategories(categories):
-    if len(categories) > 0:
-        query_category = "AND ("
-        for category_id in categories:
-            query_category += f"award.oscar_category_id = {category_id} OR "
-        query_category = query_category[:-4] + ")\n"
-        return query_category
-    return ""
+def getMovieMaxBudget(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
+    min_year_query = utils.getQueryAwardMinYear(min_year)
+    max_year_query = utils.getQueryAwardMaxYear(max_year)
+    genre_query = utils.getQueryGenres(genres_list)
+    category_query = utils.getQueryCategories(categories_list)
+    only_winners_query = utils.getQueryAwardWinner(only_winners)
+    select_query = """ SELECT title, Max(budget) as maxBudget """
+    from_query = """ From movie , award """
+    from_query += getFromGenre(len(genres_list) > 0)
+    content = f"""where movie.id=award.movie_id {genre_query}  {category_query}  {min_year_query}  {max_year_query} 
+    {only_winners_query} 
+    group by title 
+    order by maxBudget desc 
+    limit 1 """
 
-def getQueryAwardMinYear(min_year):
-    if min_year > 1934:
-        return "AND award.year >= %s\n" % min_year
-    return ""
-
-
-def getQueryAwardMaxYear(max_year):
-    if max_year < 2010:
-        return "AND award.year <= %s\n" % max_year
-    return ""
+    query = select_query + from_query + content
+    max_budget = db_connector.getFromDB(query)
+    print("title = ", str(max_budget[0][0]), "budget = ", str(max_budget[0][1]))
