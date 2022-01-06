@@ -111,7 +111,7 @@ def num_of_wins_for_each_genre():
 
 
 
-
+# get cast nominees for movie
 def getMovieNomineesPersonals(movieTitle):
     query = """SELECT p.name FROM movie as m,person as p,person_movie_job as p_m_j, award_person as a_p, award as a 
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and m.id=a.movie_id and a.id=a_p.award_id and a_p.person_id=p.id """ % movieTitle
@@ -120,6 +120,8 @@ def getMovieNomineesPersonals(movieTitle):
     print("\nPrinting each actor/producers")
     for person in Person_in_movie:
         print("name = ", person[0], "\n")
+
+
 
 # get oscar winnig cast for movie
 def getMovieAwardWinningPersonals(movieTitle):
