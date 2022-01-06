@@ -2,6 +2,7 @@ import create_db_script
 import api_data_retrieve
 import db_connector
 import person
+import person_queries
 import retrieve_from_api
 from difflib import SequenceMatcher
 from fuzzywuzzy import fuzz
@@ -17,11 +18,11 @@ if __name__ == '__main__':
     # print(fuzz.ratio(s_1, unicode_line))
     try:
         db_connector.openConnection()
-        create_db_script.create_database_script()
+        # create_db_script.create_database_script()
         # person.checkPersonByDBID(3811,"Javier Bardem","f")
         # retrieve_from_api.retrieve_person()
         # create_db_script.create_database_script()
-        api_data_retrieve.retrieveMoviesAndPersonsFromCSV()
+        # api_data_retrieve.retrieveMoviesAndPersonsFromCSV()
         # retrieve_from_api.addJobsToDB()
         # retrieve_from_api.retrieve_movies_and_cast()
         # retrieve_from_api.helper()

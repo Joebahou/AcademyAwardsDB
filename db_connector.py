@@ -2,7 +2,7 @@ import mysql.connector
 from mysql.connector import errorcode
 
 
-def getFromDB(query,val=None, size=0):
+def getFromDB(query, val=None, size=0):
     try:
         if not val:
             DBConnector.cursor.execute(query)
@@ -11,7 +11,7 @@ def getFromDB(query,val=None, size=0):
             else:
                 return DBConnector.cursor.fetchmany(size)
         else:
-            DBConnector.cursor.execute(query,val)
+            DBConnector.cursor.execute(query, val)
             if size == 0:
                 return DBConnector.cursor.fetchall()
             else:
@@ -20,7 +20,7 @@ def getFromDB(query,val=None, size=0):
         print("error in getFromDB:")
         print(err.msg)
         print("query: ", query)
-        return None
+        return []
 
 
 def getLastInsertedId():
@@ -41,16 +41,18 @@ def insertToDB(query):
             # Rollback in case there is any error
             DBConnector.cnx.rollback()
 
-def insertToDBWithVal(query,val):
+
+def insertToDBWithVal(query, val):
     try:
-        DBConnector.cursor.execute(query,val)
+        DBConnector.cursor.execute(query, val)
         DBConnector.cnx.commit()
     except mysql.connector.Error as err:
-            print("error in queryToDB:")
-            print(err.msg)
-            print("query: ", query)
-            # Rollback in case there is any error
-            DBConnector.cnx.rollback()
+        print("error in queryToDB:")
+        print(err.msg)
+        print("query: ", query)
+        # Rollback in case there is any error
+        DBConnector.cnx.rollback()
+
 
 def create_table(table_name, table_description):
     try:
