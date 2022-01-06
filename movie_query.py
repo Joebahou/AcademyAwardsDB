@@ -39,7 +39,7 @@ def getMovieProdCompany(movieTitle):
 
 
 def getMovieActors(movieTitle):
-    query = """SELECT p.name,p.gender FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j 
+    query = """SELECT p.name,FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j 
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and p_m_j.job_id=j.id and j.job_name="Acting" """ % movieTitle
     Person_in_movie = db_connector.getFromDB(query)
     print("Total number of actors ", db_connector.rowcount())
@@ -50,7 +50,7 @@ def getMovieActors(movieTitle):
 
 
 def getMovieDirectors(movieTitle):
-    query = """SELECT p.name,p.gender FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j 
+    query = """SELECT p.name FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j 
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and p_m_j.job_id=j.id and j.job_name="Directing" """ % movieTitle
     person_in_movie = db_connector.getFromDB(query)
     print("Total number of directors", db_connector.rowcount())
@@ -66,17 +66,21 @@ def getNumOfNomination(movieTitle):
     numOfNomination = db_connector.getFromDB(query)
     print("Total number of nominations", numOfNomination[0][0])
 
+
+
 def getNomination(movieTitle):
-    query = """SELECT o.category,a.has_won as numOfNomination FROM movie as m,award as a, oscarCategory as o
+    query = """SELECT o.category,a.year,a.has_won as numOfNomination FROM movie as m,award as a, oscarCategory as o
         WHERE m.title = "%s" and m.id=a.movie_id and a.oscar_category_id=o.id """ % movieTitle
     Nominations = db_connector.getFromDB(query)
 
     for n in Nominations:
         print("category of nomination = ", n[0])
+        print("year = ", n[1])
         if n[1]:
             print("has won? = ", "yes", "\n")
         else:
             print("has won? = ", "no", "\n")
+
 
 def getMoviesByGenre(genre_name):
     query = """SELECT m.title FROM movie as m,genre as g, movie_genre as m_g WHERE g.genre = "%s" and 
@@ -86,7 +90,6 @@ def getMoviesByGenre(genre_name):
     print("\nPrinting each movie")
     for movie in movies_from_db:
         print("Vote count  = ", movie[0], "\n")
-
 
 
 def getNumOfWins(movieTitle):
@@ -102,17 +105,28 @@ def num_of_wins_for_each_genre():
             group by g.id order by numOfWins desc"""
     genres_count = db_connector.getFromDB(query)
     for genre in genres_count:
-        print("genre = ",genre[0])
+        print("genre = ", genre[0])
         print("num of award winnig movies  = ", genre[1], "\n")
 
 
-#get oscar winnig cast for movie
-def getMovieAwardWinnigPersonals(movieTitle):
-    query = """SELECT p.name,p.gender FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j, award_person as a_p, award as a 
+
+
+
+def getMovieNomineesPersonals(movieTitle):
+    query = """SELECT p.name FROM movie as m,person as p,person_movie_job as p_m_j, award_person as a_p, award as a 
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and m.id=a.movie_id and a.id=a_p.award_id and a_p.person_id=p.id """ % movieTitle
+    Person_in_movie = db_connector.getFromDB(query)
+    print("Total number of nominees", db_connector.rowcount())
+    print("\nPrinting each actor/producers")
+    for person in Person_in_movie:
+        print("name = ", person[0], "\n")
+
+# get oscar winnig cast for movie
+def getMovieAwardWinningPersonals(movieTitle):
+    query = """SELECT p.name FROM movie as m,person as p,person_movie_job as p_m_j, award_person as a_p, award as a 
+    WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and m.id=a.movie_id and a.id=a_p.award_id and a_p.person_id=p.id and a.has_won= 1 """ % movieTitle
     Person_in_movie = db_connector.getFromDB(query)
     print("Total number of award winning actors and producers", db_connector.rowcount())
     print("\nPrinting each actor/producers")
     for person in Person_in_movie:
-        print("name = ", person[0], )
-        print("gender = ", person[1], "\n")
+        print("name = ", person[0], "\n")
