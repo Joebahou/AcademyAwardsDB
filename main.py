@@ -7,6 +7,7 @@ from difflib import SequenceMatcher
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import string
+import movie_query
 
 if __name__ == '__main__':
 
@@ -25,7 +26,8 @@ if __name__ == '__main__':
         # retrieve_from_api.addJobsToDB()
         #retrieve_from_api.retrieve_movies_and_cast()
         #retrieve_from_api.retrive_movie_imdb_id()
-        retrieve_from_api.helper()
+        movie_query.num_of_wins_for_each_genre()
+        #retrieve_from_api.helper()
 
     finally:
         db_connector.closeConnection()

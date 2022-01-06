@@ -1,6 +1,6 @@
 import db_connector
 
-import utils
+
 
 
 def getMovieByName(movieTitle):
@@ -23,7 +23,7 @@ def getMovieGenres(movieTitle):
     WHERE m.title = "%s" and m.id=m_g.movie_id and m_g.genre_id=g.id""" % movieTitle
     genres_of_movie = db_connector.getFromDB(query)
     print("Total number of genres: ", db_connector.rowcount())
-    print("\nPrinting each genre")
+    print("\nPrinting each genre\n")
     for genre in genres_of_movie:
         print(genre[0], "\n")
 
@@ -38,15 +38,15 @@ def getMovieProdCompany(movieTitle):
         print(prod_comp[0], "\n")
 
 
-def getMovieActors(movieTitle):
-    query = """SELECT p.name,FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j 
+def getMovieTopActors(movieTitle):
+    query = """SELECT p.name FROM movie as m,person as p,person_movie_job as p_m_j,jobInMovie as j 
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and p_m_j.job_id=j.id and j.job_name="Acting" """ % movieTitle
     Person_in_movie = db_connector.getFromDB(query)
     print("Total number of actors ", db_connector.rowcount())
-    print("\nPrinting each actor")
+    print("\nPrinting each actor\n")
     for person in Person_in_movie:
-        print("name = ", person[0], )
-        print("gender = ", person[1], "\n")
+        print("name = ", person[0],"\n" )
+
 
 
 def getMovieDirectors(movieTitle):
@@ -54,10 +54,10 @@ def getMovieDirectors(movieTitle):
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and p_m_j.job_id=j.id and j.job_name="Directing" """ % movieTitle
     person_in_movie = db_connector.getFromDB(query)
     print("Total number of directors", db_connector.rowcount())
-    print("\nPrinting each director")
+    print("\nPrinting each director\n")
     for person in person_in_movie:
-        print("name = ", person[0], )
-        print("gender = ", person[1], "\n")
+        print("name = ", person[0],  "\n")
+
 
 
 def getNumOfNomination(movieTitle):
@@ -76,7 +76,7 @@ def getNomination(movieTitle):
     for n in Nominations:
         print("category of nomination = ", n[0])
         print("year = ", n[1])
-        if n[1]:
+        if n[2]:
             print("has won? = ", "yes", "\n")
         else:
             print("has won? = ", "no", "\n")
@@ -87,7 +87,7 @@ def getMoviesByGenre(genre_name):
     g.id=m_g.genre_id and m_g.movie_id=m.id""" % genre_name
     movies_from_db = db_connector.getFromDB(query)
     print("Total number of movies", db_connector.rowcount())
-    print("\nPrinting each movie")
+    print("\nPrinting each movie\n")
     for movie in movies_from_db:
         print("Vote count  = ", movie[0], "\n")
 
@@ -117,7 +117,7 @@ def getMovieNomineesPersonals(movieTitle):
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and m.id=a.movie_id and a.id=a_p.award_id and a_p.person_id=p.id """ % movieTitle
     Person_in_movie = db_connector.getFromDB(query)
     print("Total number of nominees", db_connector.rowcount())
-    print("\nPrinting each actor/producers")
+    print("\nPrinting each actor/producers\n")
     for person in Person_in_movie:
         print("name = ", person[0], "\n")
 
@@ -129,6 +129,6 @@ def getMovieAwardWinningPersonals(movieTitle):
     WHERE m.title = "%s" and m.id=p_m_j.movie_id and p_m_j.person_id=p.id and m.id=a.movie_id and a.id=a_p.award_id and a_p.person_id=p.id and a.has_won= 1 """ % movieTitle
     Person_in_movie = db_connector.getFromDB(query)
     print("Total number of award winning actors and producers", db_connector.rowcount())
-    print("\nPrinting each actor/producers")
+    print("\nPrinting each actor/producers\n")
     for person in Person_in_movie:
         print("name = ", person[0], "\n")
