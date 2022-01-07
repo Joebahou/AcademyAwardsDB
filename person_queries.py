@@ -161,3 +161,5 @@ def getQueryAwardMaxYear(max_year):
     if max_year < 2010:
         return "AND award.year <= %s\n" % max_year
     return ""
+
+
