@@ -9,27 +9,44 @@ MAX = "MAX({0})"
 AVG = "AVG({0})"
 
 
-def getMovieWithMostAwards(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
+def getMovieWithMostAwardsOrNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
     query = getSelectQuery({"title": "title", COUNT_ALL: "numOfAwards"}) + \
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list) + \
-            getGroupOrderLimit("title", "numOfAwards")
+            getGroupOrderLimit("title", "numOfAwards", 5)
     response = db_connector.getFromDB(query)
-    print("title = ", str(response[0][0]), "numOfAwards = ", str(response[0][1]))
+    for result in response:
+        print("title = ", str(result[0]), "numOfAwards = ", str(result[1]))
     return response
 
 
-def getPersonWithMostAwards(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
+def getMovieWithMostAwards(min_year=1934, max_year=2010, categories_list=[], genres_list=[]):
+    return getMovieWithMostAwardsOrNominations(min_year, max_year, True, categories_list, genres_list)
+
+
+def getMovieWithMostNominations(min_year=1934, max_year=2010, categories_list=[], genres_list=[]):
+    return getMovieWithMostAwardsOrNominations(min_year, max_year, False, categories_list, genres_list)
+
+
+def getPersonWithMostAwardsOrMostNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
     query = getSelectQuery({"person.name": "name", COUNT_ALL: "numOfAwards"}) + \
-            getFromQuery(["person", "award_person",
-                          utils.getAwardAndMovieTable(min_year, max_year, only_winners, categories_list, genres_list)],
-                         len(genres_list) > 0) + \
-            getWhereQuery(min_year, max_year, only_winners, categories_list, genres_list, "person", "award_person") +\
-            utils.getAwardPersonJoin(min_year, max_year, only_winners, categories_list) +\
-            utils.getAwardMovieJoin(genres_list) +\
-            getGroupOrderLimit("person.name", "numOfAwards")
+            getFromQuery(["person", "award_person"], len(genres_list) > 0) + \
+            utils.getAwardTable(min_year, max_year, only_winners, categories_list, genres_list) + \
+            getWhereQuery(min_year, max_year, only_winners, categories_list, genres_list, "person", "award_person") + \
+            utils.getAwardPersonJoin(min_year, max_year, only_winners, categories_list, genres_list) + \
+            getGroupOrderLimit("person.name", "numOfAwards", 5)
     response = db_connector.getFromDB(query)
-    print("title = ", str(response[0][0]), "numOfAwards = ", str(response[0][1]))
+    for result in response:
+        print("title = ", str(result[0]), "numOfAwards = ", str(result[1]))
+
     return response
+
+
+def getPersonWithMostAwards(min_year=1934, max_year=2010, categories_list=[], genres_list=[]):
+    return getPersonWithMostAwardsOrMostNominations(min_year, max_year, True, categories_list, genres_list)
+
+
+def getPersonWithMostNomi(min_year=1934, max_year=2010, categories_list=[], genres_list=[]):
+    return getPersonWithMostAwardsOrMostNominations(min_year, max_year, False, categories_list, genres_list)
 
 
 def getMovieMaxBudget(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
