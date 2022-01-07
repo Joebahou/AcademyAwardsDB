@@ -1,11 +1,8 @@
 import db_connector
 import utils
+from utils import getFromGenre
 
 
-def getFromGenre(is_exist):
-    if is_exist:
-        return """, genre , movie_genre  """
-    return ""
 
 
 def getMovieMaxBudget(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
