@@ -1,11 +1,13 @@
 import csv
 
-import award
-import categories
-import movie
-import person
-from categories import *
-from person import isPersonExistsInDB
+from . import award
+from . import categories
+from . import movie
+from . import person
+from SRC import db_connector
+
+from .person import *
+from .categories import *
 
 
 def retrieveMoviesAndPersonsFromCSV():
@@ -131,32 +133,5 @@ def getNumOrZeroIfNone(num):
     else:
         return num[0][0]
 
-# udis key = 7136f4075d33998d3d77a11a9c442439
-#
-# def retrieve_data_for_db():
-#     api_key = "12d3cdb961e65887562f143725ee1a2b"
-#     link = "https://api.themoviedb.org/3/movie/144?api_key=12d3cdb961e65887562f143725ee1a2b&language=en-US"
-#     response = requests.get(link)
-#
-#     datetmp = response.json()
-#     # getting first page
-#     data = response.json()
-#
-#     # #appending pages 1 and 2
-#     # for i in range(1, 3):
-#     #     response = requests.get("https://api.themoviedb.org/3/movie/top_rated?api_key="+api_key+"&language=en-US&page={}".format(i))
-#     #     temp_df = pd.DataFrame(response.json()["results"])[['id','title','overview','popularity','release_date','vote_average','vote_count']]
-#     #     data.append(temp_df, ignore_index=False)
-#
-#     add_movie = "INSERT INTO movies (movie_id,title) VALUES (%(movie_id)s,%(title)s)"
-#
-#     row_dict = {
-#         'movie_id': 1,
-#         'title': data['title'],
-#
-#     }
-#     cursor.execute(add_movie, row_dict)
-#
-#     cnx.commit()
-#
-#     # print(data.head())
+
+

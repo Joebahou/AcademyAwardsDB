@@ -1,5 +1,5 @@
 TABLES = {}
-TABLES['movie'] = ("CREATE TABLE movie (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,title VARCHAR(150),"
+TABLES['movie'] = ("CREATE TABLE movie (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,title VARCHAR(100),"
                    "budget INT(16),overview VARCHAR(1000),original_language CHAR(45),"
                    "popularity INT,release_date DATE,revenue INT(16),"
                    "vote_average FLOAT,vote_count INT, db_id INT,imdb_id CHAR(50) )")

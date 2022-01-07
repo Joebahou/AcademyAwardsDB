@@ -1,4 +1,4 @@
-import db_connector
+from SRC import db_connector
 
 def create_fulltext_indices():
     full_text_index_movie="""CREATE FULLTEXT INDEX title_fulltext ON movie(title)"""

@@ -1,4 +1,4 @@
-import db_connector
+from SRC import db_connector
 
 
 def getBasicPersonInfo(person_name):

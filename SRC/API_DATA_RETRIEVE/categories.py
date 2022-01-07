@@ -1,5 +1,5 @@
-import db_connector
-from utils import getNumOrZeroIfNone
+from SRC import db_connector
+from SRC import utils
 
 Animated_Feature_Film = "Animated Feature Film"
 Art_Direction = "Art Direction"
@@ -48,7 +48,7 @@ def getCategoriesByName(category_name):
 def getHighestCategoryID():
     query = """SELECT MAX(id) FROM oscarCategory"""
     highest_id = db_connector.getFromDB(query, 1)
-    return getNumOrZeroIfNone(highest_id)
+    return utils.getNumOrZeroIfNone(highest_id)
 
 
 class Category:

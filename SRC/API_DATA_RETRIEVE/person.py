@@ -1,9 +1,9 @@
 from unidecode import unidecode
 
-import db_connector
-import person
-import utils
-from utils import getNumOrZeroIfNone
+from SRC import db_connector
+from . import person
+from SRC import utils
+from SRC.utils import getNumOrZeroIfNone
 
 
 def isPersonExistsInDB(personName):

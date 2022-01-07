@@ -1,5 +1,5 @@
-import db_connector
-import utils
+from SRC import db_connector
+from SRC import utils
 
 COUNT_ALL = "count(*)"
 BUDGET = "budget"

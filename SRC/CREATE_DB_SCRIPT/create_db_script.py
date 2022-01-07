@@ -1,9 +1,7 @@
-import mysql.connector
-from mysql.connector import errorcode
 
-import db_connector
-import tables
-from db_connector import create_database
+from SRC import db_connector
+from . import tables
+
 
 
 def create_database_script():

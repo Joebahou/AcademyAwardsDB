@@ -1,4 +1,4 @@
-import db_connector
+from SRC import db_connector
 
 
 def addAwardQuery(year, category_id, movie_id, has_won):
