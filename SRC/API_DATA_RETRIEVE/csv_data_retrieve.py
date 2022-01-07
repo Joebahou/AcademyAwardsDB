@@ -10,7 +10,7 @@ from .person import *
 from .categories import *
 
 
-def retrieveMoviesAndPersonsFromCSV():
+def retrieveFromCSV():
     addCategoriesToDB()
 
     file = open("movies2.csv", encoding="utf8", errors="ignore")

@@ -3,7 +3,7 @@ import SRC.queries.full_text_query
 import SRC.queries.movie_query
 import SRC.queries.oscar_query_2
 from SRC import db_connector
-from SRC.API_DATA_RETRIEVE import retrieve_from_api, api_data_retrieve
+from SRC.API_DATA_RETRIEVE import retrieve_from_api, csv_data_retrieve
 from SRC.CREATE_DB_SCRIPT import create_db_script, create_db_indices
 from SRC.queries import movie_query, oscar_query_2, full_text_query
 

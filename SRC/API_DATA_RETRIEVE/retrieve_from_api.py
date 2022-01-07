@@ -47,17 +47,7 @@ def retrieve_person():
                   + str(id))
 
 
-def retrive_movie_imdb_id():
-    start = movie.getLowestMovieID()
-    end = movie.getHighestMovieID()
-    for i in range(start, end + 1):
-        movie_ = movie.getMoviesByID(i)
-        if not movie_:
-            continue
-        if movie_.release_date is None:
-            continue
-        db_id = movie_.db_id
-        load_imdb(i, db_id)
+
 
 
 def isSimilar(list_of_str1, list_of_str2):
@@ -78,7 +68,7 @@ def load_new_details_on_movie(movie_id, movie_db_id):
 
     
 
-def fix_retrival():
+def retrieveSecondTry():
     end = movie.getHighestMovieID()
     start = movie.getLowestMovieID()
     movie_title = ""
@@ -222,11 +212,6 @@ def load_more_details_on_movie(movie_id, movie_db_id):
 
 
 
-def load_imdb(movie_id, movie_db_id):
-    link = "https://api.themoviedb.org/3/movie/" + str(movie_db_id) + "?api_key=" + api_key + "&language=en-US"
-    response = requests.get(link)
-    data = response.json()
-    movie.insert_imdb(movie_id, data["imdb_id"])
 
 
 def addJobsToDB():
