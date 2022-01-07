@@ -1,6 +1,7 @@
 import create_db_script
 import api_data_retrieve
 import db_connector
+import full_text_query
 import oscar_query_2
 import person
 import person_queries
@@ -10,7 +11,7 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import string
 import movie_query
-import oscar_query
+import create_db_indices
 
 if __name__ == '__main__':
 
@@ -33,13 +34,14 @@ if __name__ == '__main__':
         # movie_query.num_of_wins_for_each_genre()
         oscar_query_2.getMovieWithMostAwards(max_year=2010, genres_list=[12])
         oscar_query_2.getPersonWithMostAwards(max_year=2010, only_winners=True, genres_list=[12])
-        oscar_query_2.getMovieMaxBudget(max_year=2010, only_winners=True, genres_list=[12])
-        oscar_query_2.getMovieAvgBudget(max_year=2010, only_winners=True, genres_list=[12])
-        oscar_query_2.getMovieMaxRevenue(max_year=2010, only_winners=True, genres_list=[12])
-        oscar_query_2.getMovieAvgRevenue(max_year=2010, only_winners=True, genres_list=[12])
+        oscar_query_2.getMovieMaxBudget(max_year=2010, only_winners=True, genres_list=[12],categories_list=[22,21])
+        oscar_query_2.getMovieAvgBudget(max_year=2010)
+        oscar_query_2.getMovieMaxRevenue(max_year=2010)
+        oscar_query_2.getMovieAvgRevenue(max_year=2010)
         oscar_query_2.getMovieMaxPopularity(max_year=2000, only_winners=True, genres_list={12})
         oscar_query_2.getMovieAvgPopularity(max_year=2000, only_winners=True, genres_list={12})
-
+        #create_db_indices.create_indices()
+        # full_text_query.feelingLuckyQuery("bi")
         # retrieve_from_api.helper()
 
     finally:
