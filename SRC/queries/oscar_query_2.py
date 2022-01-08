@@ -9,7 +9,44 @@ MAX = "MAX({0})"
 AVG = "AVG({0})"
 
 
-def getMovieWithMostAwardsOrNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
+def getNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
+    min_year_query = utils.getQueryAwardMinYear(min_year, False)
+    with_and = len(min_year_query) > 0
+    max_year_query = utils.getQueryAwardMaxYear(max_year, with_and)
+    with_and = len(min_year_query + max_year_query) > 0
+    only_winners_query = utils.getQueryAwardWinner(only_winners, with_and)
+    with_and = len(min_year_query + max_year_query + only_winners_query) > 0
+    category_query = utils.getQueryCategories(categories_list, with_and)
+    with_having = len(min_year_query + max_year_query + only_winners_query + category_query)
+    having = utils.getHaving(with_having)
+    genre_from = utils.getFromGenre(len(genres_list))
+    genre_query = utils.getQueryGenres(genres_list, join_with="movie.id")
+    query = f"""SELECT 	awardJoinPerson.awardYear, 
+		        oscarCategory.category, 
+                movie.title,
+                awardJoinPerson.personName,
+                awardJoinPerson.won
+                FROM movie, oscarCategory {genre_from},
+	                (SELECT person.name as personName,
+			                award.id as awardId, award.year as awardYear, award.oscar_category_id as categoryId,
+			                award.movie_id as mivieId, award.has_won as won
+	                From award_person
+	                right join award on award.id = award_person.award_id
+	                left join person on person.id = award_person.person_id
+	            {having} {min_year_query} {max_year_query} {only_winners_query} {category_query}) as awardJoinPerson
+                WHERE oscarCategory.id = awardJoinPerson.categoryId
+                AND movie.id = awardJoinPerson.mivieId
+                 {genre_query}
+                order by awardJoinPerson.awardYear desc, oscarCategory.category, awardJoinPerson.won desc
+"""
+    response = db_connector.getFromDB(query)
+    for result in response:
+        print(result)
+    return response
+
+
+def getMovieWithMostAwardsOrNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[],
+                                        genres_list=[]):
     query = getSelectQuery({"title": "title", COUNT_ALL: "numOfAwards"}) + \
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list) + \
             getGroupOrderLimit("title", "numOfAwards", 5)
@@ -27,7 +64,8 @@ def getMovieWithMostNominations(min_year=1934, max_year=2010, categories_list=[]
     return getMovieWithMostAwardsOrNominations(min_year, max_year, False, categories_list, genres_list)
 
 
-def getPersonWithMostAwardsOrMostNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[], genres_list=[]):
+def getPersonWithMostAwardsOrMostNominations(min_year=1934, max_year=2010, only_winners=False, categories_list=[],
+                                             genres_list=[]):
     query = getSelectQuery({"person.name": "name", COUNT_ALL: "numOfAwards"}) + \
             getFromQuery(["person", "award_person"], len(genres_list) > 0) + \
             utils.getAwardTable(min_year, max_year, only_winners, categories_list, genres_list) + \
@@ -124,7 +162,7 @@ def getWhereQuery(min_year=1934, max_year=2010, only_winners=False, categories_l
     genre_query = utils.getQueryGenres(genres_list)
     category_query = utils.getQueryCategories(categories_list)
     only_winners_query = utils.getQueryAwardWinner(only_winners)
-    where_query = f""" where {nominee_table}.id={award_table}.{nominee_table}_id {genre_query} {category_query} {min_year_query} {max_year_query} {only_winners_query} 
+    where_query = f""" WHERE {nominee_table}.id={award_table}.{nominee_table}_id {genre_query} {category_query} {min_year_query} {max_year_query} {only_winners_query} 
                  """
     return where_query
 

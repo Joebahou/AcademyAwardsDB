@@ -5,9 +5,12 @@ def getNumOrZeroIfNone(num):
         return num[0][0]
 
 
-def getQueryGenres(genres):
+def getQueryGenres(genres, withAnd=True, join_with="award.movie_id"):
+    and_ = ""
+    if withAnd:
+        and_ = "AND"
     if len(genres) > 0:
-        query_genre = "AND award.movie_id = movie_genre.movie_id AND ("
+        query_genre = f"{and_} {join_with} = movie_genre.movie_id AND ("
         for genre_id in genres:
             query_genre += f""" movie_genre.genre_id = {genre_id} OR """
         query_genre = query_genre[:-4] + ")\n"
@@ -15,9 +18,12 @@ def getQueryGenres(genres):
     return ""
 
 
-def getQueryCategories(categories):
+def getQueryCategories(categories, withAnd=True):
+    and_ = ""
+    if withAnd:
+        and_ = "AND"
     if len(categories) > 0:
-        query_category = "AND ("
+        query_category = f"{and_} ("
         for category_id in categories:
             query_category += f"award.oscar_category_id = {category_id} OR "
         query_category = query_category[:-4] + ")\n"
@@ -25,21 +31,36 @@ def getQueryCategories(categories):
     return ""
 
 
-def getQueryAwardMinYear(min_year):
+def getQueryAwardMinYear(min_year, withAnd=True):
+    and_ = ""
+    if withAnd:
+        and_ = "AND"
     if min_year > 1934:
-        return "AND award.year >= %s\n" % min_year
+        return f" {and_} award.year >= %s\n" % min_year
     return ""
 
 
-def getQueryAwardMaxYear(max_year):
+def getQueryAwardMaxYear(max_year, withAnd=True):
+    and_ = ""
+    if withAnd:
+        and_ = "AND"
     if max_year < 2010:
-        return "AND award.year <= %s\n" % max_year
+        return f"{and_} award.year <= %s\n" % max_year
     return ""
 
 
-def getQueryAwardWinner(only_winners):
+def getQueryAwardWinner(only_winners, withAnd=True):
+    and_ = ""
+    if withAnd:
+        and_ = "AND"
     if only_winners:
-        return "AND award.has_won = 1"
+        return f"{and_} award.has_won = 1"
+    return ""
+
+
+def getHaving(withHaving):
+    if withHaving:
+        return "HAVING"
     return ""
 
 
