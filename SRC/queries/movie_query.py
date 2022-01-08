@@ -1,8 +1,6 @@
 from SRC import db_connector
 
 
-
-
 def getMovieByName(movieTitle):
     query = """SELECT * FROM movie WHERE title = "%s" """ % movieTitle
     movies_from_db = db_connector.getFromDB(query)
@@ -45,8 +43,7 @@ def getMovieTopActors(movieTitle):
     print("Total number of actors ", db_connector.rowcount())
     print("\nPrinting each actor\n")
     for person in Person_in_movie:
-        print("name = ", person[0],"\n" )
-
+        print("name = ", person[0], "\n")
 
 
 def getMovieDirectors(movieTitle):
@@ -56,8 +53,7 @@ def getMovieDirectors(movieTitle):
     print("Total number of directors", db_connector.rowcount())
     print("\nPrinting each director\n")
     for person in person_in_movie:
-        print("name = ", person[0],  "\n")
-
+        print("name = ", person[0], "\n")
 
 
 def getNumOfNomination(movieTitle):
@@ -65,7 +61,6 @@ def getNumOfNomination(movieTitle):
         WHERE m.title = "%s" and m.id=a.movie_id """ % movieTitle
     numOfNomination = db_connector.getFromDB(query)
     print("Total number of nominations", numOfNomination[0][0])
-
 
 
 def getNomination(movieTitle):
@@ -99,52 +94,6 @@ def getNumOfWins(movieTitle):
     print("Total number of wins", numOfWins[0][0])
 
 
-def num_of_noms_and_wins_for_each_genre():
-    query = """ select numOfwins.genre,numOfnom.num_of_nominations,numOfwins.num_of_nominations
-                FROM
-                    (SELECT T.genre , count(*) AS num_of_nominations
-                    FROM
-                    (SELECT 
-                        g.genre as genre, a.id as id, has_won
-                    FROM
-                        movie AS m,
-                        award AS a,
-                        genre AS g,
-                        movie_genre AS m_g
-                    WHERE
-                            m.id = m_g.movie_id
-                            AND m_g.genre_id = g.id
-                            AND m.id = a.movie_id
-                    GROUP BY g.id,a.id) as T
-                    group by genre
-                    order by num_of_nominations desc) numOfnom,
-                    (select T.genre , count(*) AS num_of_nominations
-                    from
-                    (SELECT 
-                        g.genre as genre, a.id as id, has_won
-                    FROM
-                        movie AS m,
-                        award AS a,
-                        genre AS g,
-                        movie_genre AS m_g
-                    WHERE
-                            m.id = m_g.movie_id
-                            AND m_g.genre_id = g.id
-                            AND m.id = a.movie_id
-                            and a.has_won=1
-                    GROUP BY g.id,a.id) as T
-                group by genre
-                order by num_of_nominations desc) numOfwins
-                where numOfwins.genre=numOfnom.genre """
-    genres_count = db_connector.getFromDB(query)
-    for genre in genres_count:
-        print("genre = ", genre[0])
-        print("num of nominations  = ", genre[1])
-        print("num of wins  = ", genre[2], "\n")
-
-
-
-
 # get cast nominees for movie
 def getMovieNomineesPersonals(movieTitle):
     query = """SELECT p.name FROM movie as m,person as p,person_movie_job as p_m_j, award_person as a_p, award as a 
@@ -154,7 +103,6 @@ def getMovieNomineesPersonals(movieTitle):
     print("\nPrinting each actor/producers\n")
     for person in Person_in_movie:
         print("name = ", person[0], "\n")
-
 
 
 # get oscar winnig cast for movie
