@@ -1,3 +1,5 @@
+import sys
+
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -26,6 +28,7 @@ def getFromDB(query, val=None, size=0):
 def getLastInsertedId():
     return DBConnector.cursor.lastrowid
 
+
 def rowcount():
     return DBConnector.cursor.rowcount
 
@@ -45,7 +48,7 @@ def insertToDB(query):
             DBConnector.cnx.rollback()
 
 
-def insertToDBWithVal(query,val=None):
+def insertToDBWithVal(query, val=None):
     if val is None:
         try:
             DBConnector.cursor.execute(query)
@@ -58,14 +61,15 @@ def insertToDBWithVal(query,val=None):
             DBConnector.cnx.rollback()
     else:
         try:
-            DBConnector.cursor.execute(query,val)
+            DBConnector.cursor.execute(query, val)
             DBConnector.cnx.commit()
         except mysql.connector.Error as err:
-                print("error in queryToDB:")
-                print(err.msg)
-                print("query: ", query)
-                # Rollback in case there is any error
-                DBConnector.cnx.rollback()
+            print("error in queryToDB:")
+            print(err.msg)
+            print("query: ", query)
+            # Rollback in case there is any error
+            DBConnector.cnx.rollback()
+
 
 def create_table(table_name, table_description):
     try:
@@ -104,19 +108,27 @@ def create_database():
 
 
 def closeConnection():
-    DBConnector.cursor.close()
-    DBConnector.cnx.close()
+    try:
+        DBConnector.cursor.close()
+        DBConnector.cnx.close()
+    except:
+        print("couldn't log out to server")
+        sys.exit(1)
 
 
 def openConnection():
-    DBConnector.cnx = mysql.connector.connect(
-        host="localhost",
-        user="DbMysql34",
-        password="DbMysql34",
-        port=3305
-    )
-    DBConnector.cnx.database = DBConnector.DB_NAME
-    DBConnector.cursor = DBConnector.cnx.cursor()
+    try:
+        DBConnector.cnx = mysql.connector.connect(
+            host="localhost",
+            user="DbMysql34",
+            password="DbMysql34",
+            port=3305
+        )
+        DBConnector.cnx.database = DBConnector.DB_NAME
+        DBConnector.cursor = DBConnector.cnx.cursor()
+    except:
+        print("couldn't log in to server")
+        sys.exit(1)
 
 
 class DBConnector:
