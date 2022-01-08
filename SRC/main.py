@@ -6,8 +6,10 @@ from SRC.queries import oscar_query_2
 from SRC.queries import movie_query
 from SRC.queries import person_queries
 from SRC.queries import full_text_query
+from SRC.queries import genres_query
 from SRC.CREATE_DB_SCRIPT import create_db_script
 from SRC.CREATE_DB_SCRIPT import create_db_indices
+
 
 if __name__ == '__main__':
     try:
@@ -62,7 +64,7 @@ if __name__ == '__main__':
         print("************************************")
         oscar_query_2.getPersonWithMostNomi()
         print("************************************")
-        movie_query.num_of_noms_and_wins_for_each_genre()
+        genres_query.num_of_noms_and_wins_for_each_genre()
         oscar_query_2.getMovieWithMostAwards(max_year=2010, genres_list=[12])
         oscar_query_2.getPersonWithMostAwards(max_year=2010, genres_list=[12])
         oscar_query_2.getMovieMaxBudget(max_year=2010, only_winners=True, genres_list=[12],categories_list=[22,21])
