@@ -9,10 +9,8 @@ def getBasicPersonInfo(person_name):
     return None
 
 
-
-
-def getPersonNominations(person_name, categories=[], min_year=1934, max_year=2010):
-    query = getQueryNominationsByPerson(person_name, categories=categories, min_year=min_year, max_year=max_year)
+def getPersonNominations(person_name):
+    query = getQueryNominationsByPerson(person_name)
     response = db_connector.getFromDB(query)
 
     return response
@@ -144,5 +142,3 @@ def getQueryAwardMaxYear(max_year):
     if max_year < 2010:
         return "AND award.year <= %s\n" % max_year
     return ""
-
-
