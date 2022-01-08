@@ -7,6 +7,5 @@ def feelingLuckyQuery(free_text):
                 where match (title) against ('{free_text}*' IN BOOLEAN MODE)
                 order by popularity desc limit 10"""
     response = db_connector.getFromDB(query)
-    for result in response:
-        print(result)
+
     return response

@@ -16,9 +16,9 @@ def retrieveFromCSV():
     file = open("movies2.csv", encoding="utf8", errors="ignore")
     csvreader = csv.reader(file)
     header = next(csvreader)
-    print(header)
+    #print(header)
     for row in csvreader:
-        print(row)
+        #print(row)
         addMovieToDB(row)
         addPersonToDB(row)
         addAwardToDB(row)
@@ -57,8 +57,8 @@ def checkRegularName(name):
     for sub_name in name_split:
         if not sub_name.isalpha():
             not_regular_name = True
-    if not_regular_name:
-        print("****** not regular name: ", name)
+    # if not_regular_name:
+    #     print("****** not regular name: ", name)
 
 
 def addCategoryToDB(category):

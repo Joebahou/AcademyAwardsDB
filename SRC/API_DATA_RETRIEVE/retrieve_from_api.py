@@ -86,7 +86,7 @@ def retrieveSecondTry():
         data_movie = response_movie.json()
         matched_in_db = False
         movie_db_id = 0
-        print("sql movie: " + movie_title + ", " + str(nomination_year))
+        #print("sql movie: " + movie_title + ", " + str(nomination_year))
         for d in data_movie["results"]:
             n = d["title"]
             n_original = d["original_title"].lower()
@@ -112,12 +112,12 @@ def retrieveSecondTry():
                         matched_in_db = True
                         break
 
-            print("sql movie: " + movie_title + ", " + str(nomination_year) +
-                  " \t, db movie: " + n + ", " + str(d["release_date"]))
+            #print("sql movie: " + movie_title + ", " + str(nomination_year) +
+            #      " \t, db movie: " + n + ", " + str(d["release_date"]))
 
-        if not matched_in_db:
-            print("the movie " + movie_title + " was not found in api, please check why, not updating in sql, id= "
-                  + str(movie_sql_id) + "nomination year = " + str(nomination_year))
+        # if not matched_in_db:
+        #      print("the movie " + movie_title + " was not found in api, please check why, not updating in sql, id= "
+        #          + str(movie_sql_id) + "nomination year = " + str(nomination_year))
 
         else:
             load_more_details_on_movie(movie_sql_id, movie_db_id)
@@ -176,12 +176,12 @@ def retrieve_movies_and_cast():
                                           , d["vote_average"], d["vote_count"], movie_db_id)
                         matched_in_db = True
                         break
-            else:
-                print("sql movie name = " + movie_title + " , db movie name = " + n)
+            # else:
+            #     print("sql movie name = " + movie_title + " , db movie name = " + n)
 
-        if not matched_in_db:
-            print("the movie " + movie_title + " was not found in api, please check why, not updating in sql, id= "
-                  + str(i) + "nomination year = " + str(nomination_year))
+        # if not matched_in_db:
+        #     print("the movie " + movie_title + " was not found in api, please check why, not updating in sql, id= "
+        #           + str(i) + "nomination year = " + str(nomination_year))
 
         else:
             load_more_details_on_movie(i, movie_db_id)

@@ -4,7 +4,6 @@ from mysql.connector import errorcode
 
 def getFromDB(query, val=None, size=0):
     try:
-        print("query: ", query)
         if not val:
             DBConnector.cursor.execute(query)
             if size == 0:

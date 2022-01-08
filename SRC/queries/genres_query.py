@@ -39,7 +39,5 @@ def num_of_noms_and_wins_for_each_genre():
                 order by num_of_nominations desc) numOfwins
                 where numOfwins.genre=numOfnom.genre """
     genres_count = db_connector.getFromDB(query)
-    for genre in genres_count:
-        print("genre = ", genre[0])
-        print("num of nominations  = ", genre[1])
-        print("num of wins  = ", genre[2], "\n")
+
+    return genres_count

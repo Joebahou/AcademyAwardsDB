@@ -2,7 +2,7 @@ from SRC import db_connector
 from SRC.API_DATA_RETRIEVE import retrieve_from_api
 from SRC.API_DATA_RETRIEVE import csv_data_retrieve
 
-from SRC.queries import oscar_query_2
+from SRC.queries import oscar_query
 from SRC.queries import movie_query
 from SRC.queries import person_queries
 from SRC.queries import full_text_query
@@ -10,7 +10,7 @@ from SRC.queries import genres_query
 from SRC.CREATE_DB_SCRIPT import create_db_script
 from SRC.CREATE_DB_SCRIPT import create_db_indices
 from SRC.queries.movie_query import getMovieByName
-from SRC.queries.oscar_query_2 import getNominations, getMovieWithMostNominations
+from SRC.queries.oscar_query import getNominations, getMovieWithMostNominations
 from SRC.queries.person_queries import getCountPersonWins, getCountPersonNominations, getCountPersonMovies
 
 if __name__ == '__main__':
@@ -50,58 +50,47 @@ if __name__ == '__main__':
 
         #
         # print("************************************")
-        # oscar_query_2.getMovieWithMostAwards()
+        # oscar_query.getMovieWithMostAwards()
         # print("************************************")
-        # oscar_query_2.getMovieWithMostNominations()
+        # oscar_query.getMovieWithMostNominations()
         # print("************************************")
-        # oscar_query_2.getMovieMaxBudget(max_year=2010, only_winners=True, genres_list=[12],categories_list=[22,21])
+        # oscar_query.getMovieMaxBudget(max_year=2010, only_winners=True, genres_list=[12],categories_list=[22,21])
         # print("************************************")
-        # oscar_query_2.getMovieAvgBudget(max_year=2000)
+        # oscar_query.getMovieAvgBudget(max_year=2000)
         # print("************************************")
-        # oscar_query_2.getMovieMaxRevenue(genres_list=[12])
+        # oscar_query.getMovieMaxRevenue(genres_list=[12])
         # print("************************************")
-        # oscar_query_2.getMovieAvgRevenue(categories_list=[22,21])
+        # oscar_query.getMovieAvgRevenue(categories_list=[22,21])
         # print("************************************")
-        # oscar_query_2.getMovieMaxPopularity(only_winners=True)
+        # oscar_query.getMovieMaxPopularity(only_winners=True)
         # print("************************************")
-        # oscar_query_2.getMovieAvgPopularity(max_year=2000, only_winners=True, genres_list={12})
+        # oscar_query.getMovieAvgPopularity(max_year=2000, only_winners=True, genres_list={12})
         # print("************************************")
-        # oscar_query_2.getPersonWithMostAwards(min_year=1980, genres_list=[12])
+        # oscar_query.getPersonWithMostAwards(min_year=1980, genres_list=[12])
         # print("************************************")
-        # oscar_query_2.getPersonWithMostNomi(min_year=1980)
+        # oscar_query.getPersonWithMostNomi(min_year=1980)
         # print("************************************")
-        # oscar_query_2.getPersonWithMostAwards(genres_list={12})
+        # oscar_query.getPersonWithMostAwards(genres_list={12})
         # print("************************************")
-        # oscar_query_2.getPersonWithMostNomi(genres_list={12}, categories_list=[22, 21])
+        # oscar_query.getPersonWithMostNomi(genres_list={12}, categories_list=[22, 21])
         # print("************************************")
-        # oscar_query_2.getPersonWithMostAwards(categories_list=[22, 21])
+        # oscar_query.getPersonWithMostAwards(categories_list=[22, 21])
         # print("************************************")
-        # oscar_query_2.getPersonWithMostNomi()
+        # oscar_query.getPersonWithMostNomi()
         # print("************************************")
-        # genres_query.num_of_noms_and_wins_for_each_genre()
-        # oscar_query_2.getMovieWithMostAwards(max_year=2010, genres_list=[12])
-        # oscar_query_2.getPersonWithMostAwards(max_year=2010, genres_list=[12])
-        # oscar_query_2.getMovieMaxBudget(max_year=2010, only_winners=True, genres_list=[12],categories_list=[22,21])
-        # oscar_query_2.getMovieAvgBudget(max_year=2010)
-        # oscar_query_2.getMovieMaxRevenue(max_year=2010)
-        # oscar_query_2.getMovieAvgRevenue(max_year=2010)
-        # oscar_query_2.getMovieMaxPopularity(max_year=2000, only_winners=True, genres_list={12})
-        # oscar_query_2.getMovieAvgPopularity(max_year=2000, only_winners=True, genres_list={12})
-        # full_text_query.feelingLuckyQuery("bi")
-        # person_queries.getCountPersonMovies("Javier Bardem")
-        # getNominations()
-        # getNominations(min_year=2000)
-        # getNominations(max_year=2009)
-        # getNominations(min_year=2000, max_year=2009)
-        # getNominations(categories_list=[21, 22])
-        # getNominations(min_year=2000, max_year=2009, categories_list=[21, 22])
-        # getNominations(only_winners=True)
-        # getNominations(only_winners=True, categories_list=[21, 22])
-        # getNominations(min_year=2008, max_year=2009, only_winners=True, categories_list=[21, 22], genres_list=[12, 18])
-        getCountPersonMovies("Morgan Freeman")
+        # print(genres_query.num_of_noms_and_wins_for_each_genre())
 
+        # print(oscar_query.getMovieMaxRevenue(max_year=2010))
+        # print(oscar_query.getMovieMaxPopularity(max_year=2000, only_winners=True, genres_list={12}))
 
-        # oscar_query_2.getMovieWithMostNominations(min_year=1990, max_year=2000, categories_list=[21, 22], genres_list=[12, 18])
+        # print(full_text_query.feelingLuckyQuery("bi"))
+        # print(person_queries.getCountPersonMovies("Javier Bardem"))
+
+        # print(getNominations(min_year=2010))
+        # print(getNominations(only_winners=True, categories_list=[21, 22]))
+
+        # print(getCountPersonMovies("Morgan Freeman"))
+        # print(oscar_query.getMovieWithMostNominations(min_year=1990, max_year=2000, categories_list=[21, 22], genres_list=[12, 18]))
 
     finally:
         ######## closing connection to db ########

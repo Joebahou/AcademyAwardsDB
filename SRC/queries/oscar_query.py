@@ -40,8 +40,6 @@ def getNominations(min_year=1934, max_year=2010, only_winners=False, categories_
                 order by awardJoinPerson.awardYear desc, oscarCategory.category, awardJoinPerson.won desc
 """
     response = db_connector.getFromDB(query)
-    for result in response:
-        print(result)
     return response
 
 
@@ -51,8 +49,6 @@ def getMovieWithMostAwardsOrNominations(min_year=1934, max_year=2010, only_winne
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list) + \
             getGroupOrderLimit("title", "numOfAwards", 5)
     response = db_connector.getFromDB(query)
-    for result in response:
-        print("title = ", str(result[0]), "numOfAwards = ", str(result[1]))
     return response
 
 
@@ -73,8 +69,6 @@ def getPersonWithMostAwardsOrMostNominations(min_year=1934, max_year=2010, only_
             utils.getAwardPersonJoin(min_year, max_year, only_winners, categories_list, genres_list) + \
             getGroupOrderLimit("person.name", "numOfAwards", 5)
     response = db_connector.getFromDB(query)
-    for result in response:
-        print("title = ", str(result[0]), "numOfAwards = ", str(result[1]))
 
     return response
 
@@ -92,7 +86,6 @@ def getMovieMaxBudget(min_year=1934, max_year=2010, only_winners=False, categori
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list) + \
             getGroupOrderLimit("title", "maxBudget")
     response = db_connector.getFromDB(query)
-    print("title = ", str(response[0][0]), "maxBudget = ", str(response[0][1]))
     return response
 
 
@@ -100,7 +93,7 @@ def getMovieAvgBudget(min_year=1934, max_year=2010, only_winners=False, categori
     query = getSelectQuery({AVG.format(BUDGET): "avgBudget"}) + \
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list)
     response = db_connector.getFromDB(query)
-    print("avgBudget = ", str(response[0][0]))
+
     return response
 
 
@@ -109,7 +102,7 @@ def getMovieMaxRevenue(min_year=1934, max_year=2010, only_winners=False, categor
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list) + \
             getGroupOrderLimit("title", "maxRevenue")
     response = db_connector.getFromDB(query)
-    print("title = ", str(response[0][0]), "maxRevenue = ", str(response[0][1]))
+
     return response
 
 
@@ -117,7 +110,7 @@ def getMovieAvgRevenue(min_year=1934, max_year=2010, only_winners=False, categor
     query = getSelectQuery({AVG.format(REVENUE): "avgRevenue"}) + \
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list)
     response = db_connector.getFromDB(query)
-    print("avgRevenue = ", str(response[0][0]))
+
     return response
 
 
@@ -126,7 +119,7 @@ def getMovieMaxPopularity(min_year=1934, max_year=2010, only_winners=False, cate
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list) + \
             getGroupOrderLimit("title", "maxPopularity")
     response = db_connector.getFromDB(query)
-    print("title = ", str(response[0][0]), "maxPopularity = ", str(response[0][1]))
+
     return response
 
 
@@ -134,7 +127,7 @@ def getMovieAvgPopularity(min_year=1934, max_year=2010, only_winners=False, cate
     query = getSelectQuery({AVG.format(POPULARITY): "avgPopularity"}) + \
             getFromWhereQuery(min_year, max_year, only_winners, categories_list, genres_list)
     response = db_connector.getFromDB(query)
-    print("avgPopularity = ", str(response[0][0]))
+
     return response
 
 

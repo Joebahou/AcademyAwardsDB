@@ -5,39 +5,22 @@ def getBasicPersonInfo(person_name):
     query = f"""SELECT person.name, person.gender FROM person WHERE person.name = '{person_name}'"""
     response = db_connector.getFromDB(query)
     if len(response) > 0:
-        print(response[0])
         return response[0]
     return None
 
 
-def getNumOfOscarNominations(person_name, genres=[], categories=[],
-                             min_year=1934, max_year=2010):
-    return getCountPersonNominations(person_name, False, True, genres, categories, min_year, max_year)
-
-
-def getNumOfMovies(person_name, genres=[], categories=[],
-                   min_year=1934, max_year=2010):
-    return getCountPersonNominations(person_name, False, False, genres, categories, min_year, max_year)
-
-
-def getNumOfWins(person_name, genres=[], categories=[],
-                 min_year=1934, max_year=2010):
-    return getCountPersonNominations(person_name, True, True, genres, categories, min_year, max_year)
 
 
 def getPersonNominations(person_name, categories=[], min_year=1934, max_year=2010):
     query = getQueryNominationsByPerson(person_name, categories=categories, min_year=min_year, max_year=max_year)
     response = db_connector.getFromDB(query)
-    for tup in response:
-        print(tup)
+
     return response
 
 
 def getPersonMovies(person_name):
     query = getQueryMoviesByPerson(person_name)
     response = db_connector.getFromDB(query)
-    for tup in response:
-        print(tup)
     return response
 
 
@@ -45,7 +28,7 @@ def getCountPersonNominations(person_name):
     query = getQueryNominationsByPerson(person_name)
     query_count = f"""SELECT COUNT(*) FROM ({query}) AS personNominations"""
     response = db_connector.getFromDB(query_count)
-    print(response[0][0])
+
     return response[0][0]
 
 
@@ -53,7 +36,7 @@ def getCountPersonMovies(person_name):
     query = getQueryMoviesByPerson(person_name)
     query_count = f"""SELECT COUNT(*) FROM ({query}) AS personMovies"""
     response = db_connector.getFromDB(query_count)
-    print(response[0][0])
+
     return response[0][0]
 
 
@@ -61,7 +44,7 @@ def getCountPersonWins(person_name):
     query = getQueryNominationsByPerson(person_name)
     query_count = f"""SELECT COUNT(*) FROM ({query}) AS personMovies WHERE won = 1"""
     response = db_connector.getFromDB(query_count)
-    print(response[0][0])
+
     return response[0][0]
 
 
