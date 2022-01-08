@@ -13,7 +13,12 @@ from SRC.CREATE_DB_SCRIPT import create_db_indices
 
 if __name__ == '__main__':
     try:
+
+        ######## opening connection to db ########
+
         db_connector.openConnection()
+
+        #################################################
 
         ######## creating db ########
         # create_db_script.create_database_script()
@@ -30,11 +35,18 @@ if __name__ == '__main__':
 
         #################################################
 
+        ######## creating indices ########
+
+        # create_db_indices.create_indices()
+
+        #################################################
+
+        ######## queries ########
 
         ######## you can test here our queries ########
         ######## explaination for each method is in the software-docs ########
 
-        movie_query.num_of_noms_and_wins_for_each_genre()
+
         print("************************************")
         oscar_query_2.getMovieWithMostAwards()
         print("************************************")
@@ -78,4 +90,8 @@ if __name__ == '__main__':
 
 
     finally:
+        ######## closing connection to db ########
+
         db_connector.closeConnection()
+
+        #################################################
